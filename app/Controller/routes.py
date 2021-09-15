@@ -22,3 +22,14 @@ def index():
 def likes ():
     likes = Post.query.order_by(Post.likes.desc())
     return render_template('_post.html', likes=likes)
+
+@bp_routes.route('/smile/', methods = ['GET' , 'POST'])
+def smile ():
+    pform = PostForm()
+    if pform.validate_on_submit():
+        newpost = Post(title = pform.title.data, body = pform.body.data, happiness_level= pform.happiness_level.data)
+        db.session.add(newpost)
+        db.session.commit()
+        flash('New smile ' + newpost.title)
+        return redirect(url_for('routes.index'))
+    return render_template('create.html', form = pform)

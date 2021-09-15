@@ -13,14 +13,16 @@
                 {{ form.title.label }}<br>
                 {{ form.title(class="formtitle") }}<br>
                 <!-- TODO: (milestone 1) Display the error messages of the `title` field validator (if there are any validation errors).   -->  
-
+                
                 <!-- TODO: (milestone1) Include the form item for the post's `body`. Apply appropriate styling for the `body`form  item.  -->  
-
+                {{ form.body.label }}<br>
+                {{ form.body(class="body") }}<br>
                 <!-- TODO: (milestone 1) Display the error messages of the `body` field validator (if there are any validation errors).   -->  
             </div>
             
             <!-- TODO: (milestone1) Include the form item for `happiness_level` selection. Apply appropriate styling for the `happiness_level` form item.  -->  
-
+            {{ form.happiness_level.label }}<br>
+            {{ form.happiness_level(class="happiness_level") }}<br>
             <!-- TODO: (milestone2) Include the form item for `tag` selection.   -->  
 
             {{ form.submit(class="button") }}
