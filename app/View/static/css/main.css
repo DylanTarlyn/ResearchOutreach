@@ -73,3 +73,19 @@ a:hover {
     padding: 25px;
     margin: 10px 0px 10px 0px;
 }
+
+
+.postlist {
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+
+.post-box {
+    display: flex;
+    vertical-align: middle;
+    width: 32px;
+    margin: 4px 3px 4px 3px;
+    padding: 5px;
+    color: grey;
+}
