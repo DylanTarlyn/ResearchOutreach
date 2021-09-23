@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Post
+from app.Model.models import Post , Tag , postTags
 from app.Controller.forms import PostForm
 
 bp_routes = Blueprint('routes', __name__)
