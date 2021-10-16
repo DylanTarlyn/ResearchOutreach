@@ -30,6 +30,31 @@ a:hover {
     cursor:pointer;
 }
 
+.buttonLanding{
+    text-align: center;
+    width : 65px;
+    padding : 3px;    
+    font-size: 16px;
+    margin : 5px;
+    padding : 5px;
+    border: 1px solid lightgray;
+}
+
+.buttonLanding:hover{
+    background-color: rgb(49, 62, 66);
+    color: white;
+    cursor:pointer;
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
 .posttable { 
     width : 100%;
     margin: 0px;
@@ -48,20 +73,41 @@ a:hover {
     text-transform: uppercase;
 }
 
-.likebtn {
-    margin: 0 auto;
-    height: 40px;
-    width: 50px;
-    border: 0px;
-    vertical-align: middle;
-    background-image: url("..//img//like.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-    -webkit-background-size: contain;
-    -moz-background-size: contain;
-    -o-background-size: contain;
-} 
-.likebtn:hover {
-    background-image: url("..//img//like_hover.png");
-    cursor:pointer;
+
+.flash-container{
+	background: #99c5ee;
+	font-family: Tahoma;
+	font-size: 16px;
+	padding: 25px;
+	margin: 10px,0px,10px,0px;
+}
+
+.forminput{
+    text-align:left;
+    width: 62%;
+    margin: 3px;
+    padding: 3px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.studentReg{
+    text-align:left;
+    width: 62%;
+    margin: 3px;
+    padding: 3px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.FacultyReg{
+    text-align:left;
+    width: 62%;
+    margin: 3px;
+    padding: 3px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.landingLogo{
+    width: 10%;
+    padding: 5px;
+    margin: 1%;
 }

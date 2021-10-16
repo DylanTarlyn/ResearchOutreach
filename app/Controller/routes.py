@@ -15,18 +15,18 @@ bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 
 
+#Landing page w/ links to sign in or register
 @bp_routes.route('/', methods=['GET'])
-@bp_routes.route('/index', methods=['GET'])
-@login_required
 def index():
-    return render_template('index.html', title="Placeholder")
+    return render_template('index.html', title="Welcome")
 
 @bp_routes.route('/facultyTest', methods=['GET'])
 @login_required
 def facultyTest():
     user = current_user
     if user.usertype =='student':
-        return render_template('index.html', title="Access denied >:)")
+        flash ("Access denied >:)")
+        return render_template('index.html', title="Access denied")
     if user.usertype =='faculty':
         return render_template('facultyTest.html')
     else:
@@ -39,6 +39,7 @@ def studentTest():
     if user.usertype =='student':
         return render_template('studentTest.html')
     if user.usertype =='faculty':
-        return render_template('index.html', title="Access denied >:)")
+        flash ("Access denied >:)")
+        return render_template('index.html', title="Access denied")
     else:
        return render_template('index.html', title="Test failed")

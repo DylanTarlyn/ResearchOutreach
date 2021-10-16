@@ -7,12 +7,16 @@
         <form action="" method = "post">
             {{ form.hidden_tag() }}
         <div class = "forminput">
-            <br> {{ form.username.label }} <br>{{form.username(class="forminput")}}
-            <br>{{form.email.label}} <br> {{ form.email(class="forminput") }}
-            <br>{{form.student.label}} <br> {{ form.student }}
-            <br>{{form.faculty.label}} <br> {{ form.faculty }}
-            <br>{{form.password.label}} <br> {{ form.password(class="forminput") }}
-            <br>{{form.password2.label}} <br> {{ form.password2(class="forminput") }}
+            <br> {{ form.username.label }} 
+                <br>{{form.username(class="forminput")}}
+            <br>{{form.email.label}}  
+                <br> {{ form.email(class="forminput") }}
+            <br>{{form.student.label}} {{ form.student }}
+            <br>{{form.faculty.label}} {{ form.faculty }}
+            <br>{{form.password.label}} 
+                <br> {{ form.password(class="forminput") }}
+            <br>{{form.password2.label}} 
+                <br> {{ form.password2(class="forminput") }}
             <br><br>{{ form.submit}}
         </div>
     {% endif %}

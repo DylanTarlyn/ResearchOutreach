@@ -30,7 +30,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Registration Successful.')
-        return redirect(url_for('routes.index'))
+        return redirect(url_for('routes.index'))   
     return render_template('register.html', form=rform)
 
 @bp_auth.route('/login', methods=['GET', 'POST'])
