@@ -3,6 +3,17 @@
 {% block content %}
     <h1>Sign In</h1>
 
+    {% if form %}
+    <form action="" method = "post">
+        {{ form.hidden_tag() }}
+        <div>
+            <br>{{form.username.label}}<br>{{form.username(class="loginform")}}
+            <br>{{form.password.label}}<br>{{form.password(class="loginform")}}
+            <br>{{form.remember_me.label}}{{form.remember_me}}
+            <br><br>{{form.submit}}
+        </div>
+    {% endif %}
+
     <p>New User? <a href="">Click to Register!</a></p>
 {% endblock %}
 
