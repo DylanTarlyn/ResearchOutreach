@@ -1,4 +1,4 @@
-<html>
+<html style="background-image:url('/static/img/background.png');">
 
     <head>
         {% if title %}
@@ -10,14 +10,15 @@
      </head>
 
 {% block content %}
-
     <img src="{{ url_for('static', filename = 'img//logo.jpg' )}}" class = "landingLogo"> 
-     <div class = "vertical-center">
-        <p>
-            <a href="{{url_for('auth.login')}}" class = "buttonLanding">Login</a>
-            <a href="{{url_for('auth.register')}}" class = "buttonLanding">Click to Register!</a>
-        </p>
-    </div>
+    <!-- <img src="{{ url_for('static', filename = 'img//background.png' )}}" class = "landingBackground">  -->
+        <div class = "vertical-center">
+            <p>
+                <a href="{{url_for('auth.login')}}" class = "buttonLanding">Login</a>
+                <a href="{{url_for('auth.register')}}" class = "buttonLanding">Click to Register!</a>
+            </p>
+        </div>
+</div>
 {% endblock %}
 
 
