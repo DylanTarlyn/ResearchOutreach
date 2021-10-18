@@ -17,29 +17,28 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 
 #Landing page w/ links to sign in or register
 @bp_routes.route('/', methods=['GET'])
+@bp_routes.route('/index', methods=['GET'])
 def index():
-    return render_template('index.html', title="Welcome")
-
-@bp_routes.route('/facultyTest', methods=['GET'])
-@login_required
-def facultyTest():
-    user = current_user
-    if user.usertype =='student':
-        flash ("Access denied >:)")
-        return render_template('index.html', title="Access denied")
-    if user.usertype =='faculty':
-        return render_template('facultyTest.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('routes.home'))
     else:
-       return render_template('index.html', title="Test failed")
+        return render_template('index.html', title="Welcome")
 
-@bp_routes.route('/studentTest', methods=['GET'])
+#How to restrict page access by user: 
+#   user = current_user
+#   if user.usertype == 'student' (or if user.usertype == 'faculty'):
+#   issue flash message
+#   redirect to another page if they should not be allowed to view it
+#   else:
+#   do normal thing for that route
+# 
+#   feel free to use the facultyTest and studentTest html templates if you want to mess around with this
+
+
+# This route will display all of the posts
+# If the user is a student they can apply to posts
+# If the user is a faculty they can create new posts via a link in the navbar
+@bp_routes.route('/home', methods=['GET','POST'])
 @login_required
-def studentTest():
-    user = current_user
-    if user.usertype =='student':
-        return render_template('studentTest.html')
-    if user.usertype =='faculty':
-        flash ("Access denied >:)")
-        return render_template('index.html', title="Access denied")
-    else:
-       return render_template('index.html', title="Test failed")
+def home():
+    return render_template('home.html', title="Home")

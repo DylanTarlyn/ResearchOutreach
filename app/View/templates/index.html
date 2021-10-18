@@ -10,9 +10,18 @@
      </head>
 
 {% block content %}
+
+    <h1 class = "vertical-center" style="top:23%;
+                                        right:38%;
+                                        font-size: 50px;
+                                        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                        color:af0737;
+                                        text-shadow: 1px 1px 5px black, 0 0 25px black, 0 0 10px black;">
+         Research Outreach 
+    </h1>
     <img src="{{ url_for('static', filename = 'img//logo.jpg' )}}" class = "landingLogo"> 
     <!-- <img src="{{ url_for('static', filename = 'img//background.png' )}}" class = "landingBackground">  -->
-        <div class = "vertical-center">
+        <div class = "vertical-center" style="right: 47%">
             <p>
                 <a href="{{url_for('auth.login')}}" class = "buttonLanding">Login</a>
                 <a href="{{url_for('auth.register')}}" class = "buttonLanding">Click to Register!</a>

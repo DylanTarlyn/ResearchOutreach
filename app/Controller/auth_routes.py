@@ -30,13 +30,13 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Registration Successful.')
-        return redirect(url_for('routes.index'))   
+        return redirect(url_for('routes.home'))   
     return render_template('register.html', form=rform)
 
 @bp_auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('routes.index'))
+        return redirect(url_for('routes.home'))
 
     loginform=LoginForm()
     if loginform.validate_on_submit():
@@ -45,11 +45,11 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('auth.login'))
         login_user(user, remember = loginform.remember_me.data)
-        return redirect(url_for('routes.index'))
+        return redirect(url_for('routes.home'))
     return render_template('login.html', form = loginform)
 
 @bp_auth.route('/logout', methods=['GET'])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('routes.index'))
