@@ -31,13 +31,16 @@ a:hover {
 }
 
 .buttonLanding{
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%,-50%);
     text-align: center;
-    width : 65px;
-    padding : 3px;    
+    width : 65px;   
     font-size: 16px;
-    margin : 5px;
     padding : 5px;
     background-color: 231f20;
+    position: absolute;
 }
 
 .buttonLanding:link{
@@ -116,10 +119,21 @@ a:hover {
 
 .landingLogo{
     width: 10%;
-    padding: 5px;
-    margin: 1%;
+    top: 5%;
+    left: 2.5%;
+    position:absolute;
 }
 
 .landingBackground{
     width: 100%;
+}
+
+.landingText{
+    top:10%;
+    text-align: center;
+    font-size: 50px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:af0737;
+    text-shadow: 1px 1px 5px black, 0 0 25px black, 0 0 10px black;
+    position: relative;
 }
