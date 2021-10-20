@@ -1,4 +1,4 @@
-<html style="background-image:url('/static/img/background.png');">
+<html style="background-image:url('/static/img/white.jpg');">
 
     <head>
         {% if title %}
@@ -20,12 +20,11 @@
     </h1>
 
     <img src="{{ url_for('static', filename = 'img//logo.jpg' )}}" class = "landingLogo"> 
-
+    
         <div>
             <a href="{{url_for('auth.login')}}" class = "buttonLanding"  style = "left: 54%">Login</a>
             <a href="{{url_for('auth.register')}}" class = "buttonLanding"  style = "left: 46%">Click to Register!</a>
         </div>
-</div>
 {% endblock %}
 
 
