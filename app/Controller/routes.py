@@ -38,18 +38,31 @@ def index():
 # This route will display all of the posts
 # If the user is a student they can apply to posts
 # If the user is a faculty they can create new posts via a link in the navbar
+
+
 @bp_routes.route('/home', methods=['GET','POST'])
 @login_required
 def home():
-    hform = PositionForm()
-    if hform.validate_on_submit():
-        newpost = Post(project_title = hform.project_title.data, description = hform.description.data, requirments = hform.requirments.data, 
-        info = hform.faculty_info.data)
-        researchs = hform.research.data
-        for t in researchs:
-            newpost.researchs.append(t)
-        db.session.add(newpost)
-        db.session.commit()
-        flash('Reseach position has been posted '+ newpost.project_title)
-        return redirect(url_for('routes.index'))
     return render_template('home.html', title="Home")
+
+
+@bp_routes.route('/post', methods=['GET','POST'])
+@login_required
+def post():
+    user = current_user
+    if user.usertype == 'student':
+        return redirect(url_for('routes.home'))
+    else:
+        hform = PositionForm()
+        if hform.validate_on_submit():
+            newpost = Post(project_title = hform.project_title.data, description = hform.description.data, requirments = hform.requirments.data, 
+            info = hform.faculty_info.data)
+            researchs = hform.research.data
+            for t in researchs:
+                newpost.researchs.append(t)
+            db.session.add(newpost)
+            db.session.commit()
+            flash('Reseach position has been posted '+ newpost.project_title)
+            return redirect(url_for('routes.index'))
+        return render_template('_post.html', title="Home", form=hform)
+
