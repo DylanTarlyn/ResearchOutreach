@@ -46,6 +46,10 @@ def home():
     return render_template('home.html', title="Home")
 
 
+#IMPORTANT
+# To change the tags that appear, go to research.py and edit them manually in line 15
+# Be sure to delete db file everytime you do this since you are editing the db schema, otherwise it will not appear
+
 @bp_routes.route('/post', methods=['GET','POST'])
 @login_required
 def post():
@@ -55,14 +59,21 @@ def post():
     else:
         hform = PositionForm()
         if hform.validate_on_submit():
-            newpost = Post(project_title = hform.project_title.data, description = hform.description.data, requirments = hform.requirments.data, 
-            info = hform.faculty_info.data)
-            researchs = hform.research.data
-            for t in researchs:
-                newpost.researchs.append(t)
+            newpost = Post(project_title = hform.project_title.data,
+            description = hform.description.data,
+            date1 = hform.date1.data,
+            date2 = hform.date2.data,
+            time = hform.time.data,
+            requirements = hform.requirements.data, 
+            faculty_info = hform.faculty_info.data)
+            research_field = hform.research.data
+            for t in research_field:
+                newpost.research_field.append(t)
             db.session.add(newpost)
             db.session.commit()
             flash('Reseach position has been posted '+ newpost.project_title)
             return redirect(url_for('routes.index'))
+        else:
+            flash('Something went wrong')
         return render_template('_post.html', title="Home", form=hform)
 
