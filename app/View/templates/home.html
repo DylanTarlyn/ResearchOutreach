@@ -1,1 +1,11 @@
-<h1>This is a temporary home page</h1>
+{% extends "base.html" %}
+
+{%block content%}
+
+    <h1>Research Positions</h1>
+    <h2>Available Positions: {{totalPosts}}</h2>
+
+    {% for post in posts %}
+        {% include '_post.html' %}
+    {%endfor%}
+{% endblock %}

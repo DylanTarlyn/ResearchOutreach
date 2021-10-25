@@ -20,3 +20,4 @@ class PositionForm(FlaskForm):
     requirments = StringField('A brief description of the required qualifications', validators=[DataRequired()])
     faculty_info = TextAreaField('Faculty’s name and contact information ', validators = [Length(min=1,max=1500)])
     submit = SubmitField('Post')
+
