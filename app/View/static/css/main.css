@@ -159,3 +159,22 @@ a:visited{
     border: solid rgb(175, 7, 55) 3px;
     position: absolute;
 }
+
+.postbox{
+    display: flex;
+    vertical-align: middle;
+    background-color: #99c5ee;
+    width: 15%;
+    margin: 10px 0px 10px 0px;
+    padding: 2px;
+
+    @media screen and (min-width: 800px) and (max-width:1200px){
+        width: 48%;
+    }
+    @media screen and (min-width: 1200px) {
+        width: 32%;
+    }
+    @media screen and (max-width: 800px) {
+        width: 99%;
+    }
+}

@@ -40,10 +40,18 @@ def index():
 # If the user is a faculty they can create new posts via a link in the navbar
 
 
+#Home page, displays all research positions
 @bp_routes.route('/home', methods=['GET','POST'])
 @login_required
 def home():
-    return render_template('home.html', title="Home")
+    user = current_user
+    if user.usertype == 'student' or user.usertype == 'faculty':
+        totalPositions = Post.query.count()
+        position = Post.query.order_by(Post.date1.desc())
+        return render_template('home.html', title="Home", posts=position.all(), totalPosts=totalPositions)
+    else:
+        flash('Please log in to access this page.')
+        return redirect(url_for('routes.index'))
 
 
 #IMPORTANT
