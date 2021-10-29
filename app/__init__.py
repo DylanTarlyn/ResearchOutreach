@@ -6,11 +6,10 @@ from flask_login import LoginManager
 from flask_moment import Moment
 
 db = SQLAlchemy()
+moment=Moment()
 
 login = LoginManager()
 login.login_view='auth.login'
-
-moment=Moment()
 
 
 def create_app(config_class=Config):
@@ -18,11 +17,10 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
     app.static_folder = config_class.STATIC_FOLDER 
     app.template_folder = config_class.TEMPLATE_FOLDER
-
-    db.init_app(app)
     login.init_app(app)
     moment.init_app(app)
 
+    db.init_app(app)
 
     # blueprint registration
     from app.Controller.errors import bp_errors as errors

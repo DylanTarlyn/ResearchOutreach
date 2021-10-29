@@ -8,12 +8,30 @@ from app import login
 def load_user(id):
     return User.query.get(int(id))
 
+research_tag = db.Table('research_tag',
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+    db.Column('research_id', db.Integer, db.ForeignKey('research.id'))
+    )
+
+class Research(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    field = db.Column(db.String(30))
+    def __repr__(self):
+        return '<Post ({},{})', format(self.id,self.field)
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    happiness_level = db.Column(db.Integer, default = 3)
+    project_title = db.Column(db.String(150))
+    description = db.Column(db.String(300))
+    date1 = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    date2 = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    time = db.Column(db.Integer)
+    research_field = db.relationship('Research', secondary = research_tag, primaryjoin=(research_tag.c.post_id == id), backref = db.backref('research_tag', lazy='dynamic'), lazy ='dynamic')
+    requirements = db.Column(db.String(300))
+    faculty_info = db.Column(db.String(200))
+    def get_tags(self):
+        return self.research_field
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,57 +1,25 @@
-<table class = "posttable" style = "width:100%" valign="top">
-        <tr> 
-            <td colspan="3"><div class="posttitle"> {{post.title}} </div>
-            </td>
-        </tr>
-        <tr>
-            <td width="10%" >
-                <!--  (milestone1) TODO: include happiness-level image according to the `cost`s happiness_level .
-                For example : <img src="{{ url_for('static', filename = 'img//happiness-level-1.png' )}}"-->  
+{% extends "base.html" %}
 
-            </td>
+{% block content %}
+    <h1>Post</h1>
+    {% if form %}
+        <form action = "" method = "post">
+            {{ form.hidden_tag()}}
 
-            <td width="80%" >
-                <div>
-                  <!-- (milestone1) TODO: include post body -->    
-               </div>
-               <div> 
-                  <!-- (milestone3) TODO: format the timestamp; display as local date/time-->
-                  Posted at: {{ post.timestamp }}
-               </div> 
-            </td> 
+        <div class = "forminput" >
+            
+            <br> {{form.project_title.label}} <br> {{form.project_title(class = "forminput")}}
+            <br> {{form.description.label}} <br> {{form.description(class = "forminput")}}
+            <br> {{form.date1.label}} <br> {{form.date1(class = "forminput")}}
+            <br> {{form.date2.label}} <br> {{form.date2(class = "forminput")}}
+            <br> {{form.time.label}} <br> {{form.time(class = "forminput")}}
+            <br> {{form.requirements.label}} <br> {{form.requirements(class="forminput")}}
+            <br> {{form.research.label}} <br> {{form.research(class = "forminput")}}
+            <br> {{form.faculty_info.label}} <br> {{form.faculty_info(class = "forminput")}}
+            <br><br>{{form.submit}}
 
-            <td width = "5%"> 
-                <div>
-                    <!-- (milestone1)  TODO: add "like" button
-                                       Define an HTML `post` form with a submit button. The form action should redirect to `routes.like` route.
-                                       Style the submit button using `likebtn` CCS class selector. -->
-                                       
-                    <br>
-                    <!-- (milestone1) TODO: include the likes count-->
-                    
-                </div>
-                <br> 
-                 <!-- (milestone3) TODO: if the post is posted by the logged in user, include the "delete" button.  
-                                   Define an HTML `post` form with a submit button. The form action should redirect to `routes.deletepost` route.
-                                   Style the submit button using `button` CCS class selector. -->
+        </div>
+    {% endif %}
 
-            </td>
-        </tr>
-        
-        <tr> 
-            <td colspan="3" style = "text-align:center" valign="bottom">  
-                <br>
-                <!-- (milestone2) TODO: include all the tags associated with the post-->
 
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="3" style = "text-align:center" valign="bottom">  
-                <br>
-                  <!-- (milestone3) TODO: include username who posted the post-->
-
-              </td>
-            </tr>
-        </tr>
-    </table>
+{% endblock %}
