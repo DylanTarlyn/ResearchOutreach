@@ -45,7 +45,7 @@
             <!-- include tags here -->
             {% for tag in post.get_tags().all() %}
                     <span class="tagitem">
-                        {{tag.name}}
+                        {{tag.field}}
                     </span>
                 {% endfor %}
         </td>

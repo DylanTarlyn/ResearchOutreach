@@ -30,6 +30,7 @@ class Post(db.Model):
     research_field = db.relationship('Research', secondary = research_tag, primaryjoin=(research_tag.c.post_id == id), backref = db.backref('research_tag', lazy='dynamic'), lazy ='dynamic')
     requirements = db.Column(db.String(300))
     faculty_info = db.Column(db.String(200))
+    
     def get_tags(self):
         return self.research_field
 

@@ -81,7 +81,5 @@ def post():
             db.session.commit()
             flash('Reseach position has been posted '+ newpost.project_title)
             return redirect(url_for('routes.index'))
-        else:
-            flash('Something went wrong')
         return render_template('_post.html', title="Home", form=hform)
 

@@ -1,2 +1,0 @@
-FLASK_APP=research.py
-FLASK_DEBUG=1
