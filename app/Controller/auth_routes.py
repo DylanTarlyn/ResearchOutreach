@@ -31,7 +31,9 @@ def register():
         db.session.commit()
         flash('Registration Successful.')
 
-        #log in the user?
+        #log in the user to avoid having to login immediately after registering
+        login_user(user)
+
         if rform.student.data==True:
             return redirect(url_for('routes.setup'))
         else: 
