@@ -17,7 +17,7 @@ bp_auth.template_folder = Config.TEMPLATE_FOLDER
 @bp_auth.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('routes.index'))
+        return redirect(url_for('routes.index'))  
 
     rform = RegistrationForm()
     if rform.validate_on_submit():
@@ -30,7 +30,12 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Registration Successful.')
-        return redirect(url_for('routes.home'))   
+
+        #log in the user?
+        if rform.student.data==True:
+            return redirect(url_for('routes.setup'))
+        else: 
+            return redirect(url_for('routes.home'))   
     return render_template('register.html', form=rform)
 
 @bp_auth.route('/login', methods=['GET', 'POST'])

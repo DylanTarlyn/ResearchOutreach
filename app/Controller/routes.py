@@ -83,3 +83,11 @@ def post():
             return redirect(url_for('routes.index'))
         return render_template('_post.html', title="Home", form=hform)
 
+
+#broken when trying to restrict based on usertype because user is not logged in yet?
+#way to login immediately after registering?
+
+#If the user registers as a student, they are immediately sent here to finish setting up profile
+@bp_routes.route('/setup', methods=['GET','POST'])
+def setup():
+    return render_template('setup.html')

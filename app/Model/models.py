@@ -4,6 +4,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import login
 
+#TO DO:
+#Add programming language model/table w id and name to connect to user & association table w user id and  language id
+#Tech electives?
+#Add above to research.py to init site with?
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
