@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, TextAreaField ,validators, DateField
-from wtforms.validators import  DataRequired, Length
+from wtforms import StringField, SubmitField, SelectField, TextAreaField ,validators, DateField, PasswordField
+from wtforms.validators import  DataRequired, Length, Email, EqualTo
 from wtforms.widgets.core import TextArea
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from wtforms.widgets import ListWidget, CheckboxInput
@@ -25,3 +25,12 @@ class PositionForm(FlaskForm):
     requirements = StringField('A brief description of the required qualifications', validators=[DataRequired()])
     faculty_info = TextAreaField('Faculty’s name and contact information ', validators = [Length(min=1,max=1500)])
     submit = SubmitField('Post')
+
+class EditForm(FlaskForm):
+    firstname =  StringField('First Name', validators=[DataRequired()])
+    lastname =  StringField('Last Name', validators=[DataRequired()])
+    email =  StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    sumbit = SubmitField('Submit')
+    

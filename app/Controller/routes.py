@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.Model.models import Post, User
-from app.Controller.forms import PositionForm
+from app.Controller.forms import PositionForm, EditForm
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
@@ -84,12 +84,31 @@ def post():
         return render_template('_post.html', title="Home", form=hform)
 
 #If the user registers as a student, they are immediately sent here to finish setting up profile
+#@bp_routes.route('/setup', methods=['GET','POST'])
+#@login_required
+#def setup():
+#    user = current_user
+#    if user.usertype=='student':
+#        return render_template('setup.html')
+#    else:
+#        flash("You must be a student to view this page")
+#        return redirect(url_for('routes.home'))
+
 @bp_routes.route('/setup', methods=['GET','POST'])
 @login_required
 def setup():
+    eform = EditForm()
     user = current_user
     if user.usertype=='student':
-        return render_template('setup.html')
+        if eform.validate_on_submit():
+            user.firstname = eform.firstname.data
+            user.lastname = eform.lastname.data
+            user.email = eform.email.data
+            user.set_password = eform.set_password .data
+            db.session.add(user)
+            db.session.commit()
+            flash("Your account has been updated")
+        return render_template('setup.html', form = eform)
     else:
         flash("You must be a student to view this page")
         return redirect(url_for('routes.home'))
