@@ -1,0 +1,53 @@
+<table class = "posttable" style = "width:100%" valign="top">
+    <tr> 
+        <td colspan="3"><div class="posttitle"> {{post.project_title}} </div>
+        </td>
+    </tr>
+    <tr>
+        <td width="80%" >
+            <div class ="postmessage">
+              <b>Description: </b>{{post.description}} 
+        </td> 
+    </tr>
+    <tr>
+        <td width="80%" >
+            <div class ="postmessage">
+                <b>Start Date: </b>{{post.date1}} 
+        </td> 
+    </tr>
+    <tr>
+        <td width="80%" >
+            <div class ="postmessage">
+                <b>End Date: </b>{{post.date2}} 
+        </td> 
+    </tr>
+    <tr>
+        <td width="80%" >
+            <div class ="postmessage">
+                <b>Required Hours: </b>{{post.time}} 
+        </td> 
+    </tr>
+    <tr>
+        <td width="80%" >
+            <div class ="postmessage">
+                <b>Qualifications: </b>{{post.requirements}} 
+        </td> 
+    </tr>
+    <tr>
+        <td width="80%" >
+            <div class ="postmessage">
+                <b>Faculty Info: </b>{{post.faculty_info}} 
+        </td> 
+    </tr>
+    <tr> 
+        <td colspan="3" style = "text-align:center" valign="bottom">  
+            <br>
+            <!-- include tags here -->
+            {% for tag in post.get_tags().all() %}
+                    <span class="tagitem">
+                        {{tag.field}}
+                    </span>
+                {% endfor %}
+        </td>
+    </tr>
+</table>

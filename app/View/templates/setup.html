@@ -1,0 +1,25 @@
+<h1> Please complete setting up your profile </h1>
+
+<!-- This is where the student will fill out information about themself
+    such as reserach topics they are interested in, programming languages, etc
+-->
+
+{% extends "base.html" %}
+
+
+{% block content %}
+    <hl> Create a new class</hl>
+
+
+
+    {% if form %}
+        <div>
+
+        {{form.firstname.label}} {{form.firstname}}
+
+        </div>
+
+
+    {% endif %}
+
+{% endblock %}
