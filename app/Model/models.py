@@ -54,3 +54,31 @@ class User(UserMixin, db.Model):
 
     def get_usertype(self):
         return self.usertype
+
+class Student(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_firstname =  db.Column(db.String(64), unique=True, index=True)
+    student_lastname =  db.Column(db.String(64), unique=True, index=True)
+    student_GPA = db.Column(db.Float(10),unique=True, index=True)
+    stduent_phone =  db.Column(db.Integer(20), unique=True, index=True)
+    student_major =  db.Column(db.String(30), unique=True, index=True)
+    student_graduation = db.Column(db.String(100), unique=True, index=True)
+    student_researchtopic = db.Column(db.String(100), unique=True, index=True)
+    student_programminglangauge = db.Column(db.String(50), unique=True, index=True)
+    student_experience = db.Column(db.String(64), unique=True, index=True)
+
+    def __repr__(self):
+        return '<User ({},{},{},{},{},{},{},{},{},{})', format(self.id,self.student_firstname,self.student_lastname,self.student_GPA,self.stduent_phone,
+        self.student_major,self.student_graduation,self.student_researchtopic,self.student_programminglangauge,self.student_experience)
+
+class Faculty(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    faculty_firstname =  db.Column(db.String(64), unique=True, index=True)
+    faculty_lastname =  db.Column(db.String(64), unique=True, index=True)
+    faculty_ID = db.Column(db.Integer(20), unique=True, index=True)
+    faculty_phone = db.Column(db.Integer(20), unique=True, index=True)
+
+    def __repr__(self):
+        return '<User ({},{},{},{},{})', format(self.id,self.faculty_firstname,self.faculty_lastname,self.faculty_ID,self.faculty_phone)
+
+
