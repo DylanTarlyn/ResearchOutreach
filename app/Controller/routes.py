@@ -8,8 +8,8 @@ from flask_login import login_required, current_user
 
 
 from app import db
-from app.Model.models import Post, User
-from app.Controller.forms import PositionForm, EditForm
+from app.Model.models import Post, User, Research
+from app.Controller.forms import PositionForm, EditForm, SortForm
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
@@ -44,14 +44,31 @@ def index():
 @bp_routes.route('/home', methods=['GET','POST'])
 @login_required
 def home():
-    user = current_user
-    if user.usertype == 'student' or user.usertype == 'faculty':
-        totalPositions = Post.query.count()
-        position = Post.query.order_by(Post.date1.desc())
-        return render_template('home.html', title="Home", posts=position.all(), totalPosts=totalPositions)
-    else:
-        flash('Please log in to access this page.')
-        return redirect(url_for('routes.index'))
+    #user = current_user
+    sort=SortForm()
+    position=Post.query.order_by(sortorder())
+    position = Post.query.order_by(Post.date1.desc())
+    if sort.validate_on_submit(): #Sorting
+        if sort.myposts.data==True: #Sorting by only their posts
+            position=current_user.get_user_posts()
+            if sort.choices.data=='Date': 
+                position = current_user.get_user_posts().order_by(Post.date1.desc()) #Newest
+            if sort.choices.data=='Date': 
+                position = current_user.get_user_posts().order_by(Post.date1) #Oldest
+            #if sort.choices.data=='Test2': 
+            #    position = current_user.get_user_posts().order_by(Post.research_field.contains('Test2')) #Sorting by tag
+        else: #Sorting all posts
+            if sort.choices.data == 'Newest':
+                position = Post.query.order_by(Post.date1.desc())
+            if sort.choices.data == 'Oldest':
+                position = Post.query.order_by(Post.date1)
+            #if sort.choices.data == 'Test2':
+             #   position=Post.query.filter(Post.research_field.contains('Test2'))
+    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), form=sort)
+
+def sortorder():
+    sort=SortForm()
+    return sort.choices.data
 
 
 #IMPORTANT

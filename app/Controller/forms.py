@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, TextAreaField ,validators, DateField, PasswordField
+from wtforms.fields.core import BooleanField
 from wtforms.validators import  DataRequired, Length, Email, EqualTo
 from wtforms.widgets.core import TextArea
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
@@ -34,3 +35,7 @@ class EditForm(FlaskForm):
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     sumbit = SubmitField('Submit')
     
+class SortForm(FlaskForm):
+    choices=SelectField(choices=[('Newest'),('Oldest'),('Test1'),('Test2')])
+    myposts=BooleanField('Display my posts only')
+    submit=SubmitField('Apply filters')

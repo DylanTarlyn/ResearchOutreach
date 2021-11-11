@@ -4,6 +4,15 @@
 
     <h1>Research Positions</h1>
     <h2>Available Positions: {{totalPosts}}</h2>
+
+    {% block sort %}
+    <form action="" method = "post">
+      {{ form.hidden_tag() }}
+        <div class='formselect'>
+          <div>Sort by {{ form.choices }} {{form.myposts.label}}{{form.myposts}} {{ form.submit (class="button") }}</div> 
+        </div>
+    </form>
+  {% endblock %}
     
     <div class="postlist">
         {% for post in posts %}
