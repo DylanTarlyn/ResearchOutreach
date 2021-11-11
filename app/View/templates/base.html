@@ -15,6 +15,7 @@
                 {% if current_user.is_anonymous %}
                 <td><a href="{{ url_for('auth.login') }}" class = "button"> Login</a></td> 
                 {% else %}
+                <td><a href="{{url_for('routes.post')}}" class = "button"> Post Position </a></td>
                 <td><a href="{{url_for('auth.logout')}}" class = "button"> Logout </a></td>
                 {% endif %}
                 <!-- Links for nav bar go here-->

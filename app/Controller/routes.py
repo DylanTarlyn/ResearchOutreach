@@ -73,7 +73,8 @@ def post():
             date2 = hform.date2.data,
             time = hform.time.data,
             requirements = hform.requirements.data, 
-            faculty_info = hform.faculty_info.data)
+            faculty_info = hform.faculty_info.data,
+            user_id=current_user.id)
             research_field = hform.research.data
             for t in research_field:
                 newpost.research_field.append(t)

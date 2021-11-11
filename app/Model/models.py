@@ -35,6 +35,7 @@ class Post(db.Model):
     research_field = db.relationship('Research', secondary = research_tag, primaryjoin=(research_tag.c.post_id == id), backref = db.backref('research_tag', lazy='dynamic'), lazy ='dynamic')
     requirements = db.Column(db.String(300))
     faculty_info = db.Column(db.String(200))
+    user_id=db.Column(db.Integer, db.ForeignKey('user.id'))
     
     def get_tags(self):
         return self.research_field
@@ -45,6 +46,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, index=True) #Needs to be @wsu.edu domain
     password_hash = db.Column(db.String(128))
     usertype = db.Column(db.String(10))
+    posts = db.relationship('Post', backref='writer', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -55,12 +57,15 @@ class User(UserMixin, db.Model):
     def get_usertype(self):
         return self.usertype
 
+    def get_user_posts(self):
+        return self.posts
+
 class Student(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_firstname =  db.Column(db.String(64), unique=True, index=True)
     student_lastname =  db.Column(db.String(64), unique=True, index=True)
     student_GPA = db.Column(db.Float(10),unique=True, index=True)
-    stduent_phone =  db.Column(db.Integer(20), unique=True, index=True)
+    student_phone =  db.Column(db.Integer(), unique=True, index=True)
     student_major =  db.Column(db.String(30), unique=True, index=True)
     student_graduation = db.Column(db.String(100), unique=True, index=True)
     student_researchtopic = db.Column(db.String(100), unique=True, index=True)
@@ -75,8 +80,8 @@ class Faculty(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     faculty_firstname =  db.Column(db.String(64), unique=True, index=True)
     faculty_lastname =  db.Column(db.String(64), unique=True, index=True)
-    faculty_ID = db.Column(db.Integer(20), unique=True, index=True)
-    faculty_phone = db.Column(db.Integer(20), unique=True, index=True)
+    faculty_ID = db.Column(db.Integer(), unique=True, index=True)
+    faculty_phone = db.Column(db.Integer(), unique=True, index=True)
 
     def __repr__(self):
         return '<User ({},{},{},{},{})', format(self.id,self.faculty_firstname,self.faculty_lastname,self.faculty_ID,self.faculty_phone)
