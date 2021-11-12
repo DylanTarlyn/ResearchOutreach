@@ -40,7 +40,3 @@ class SortForm(FlaskForm):
     myposts=BooleanField('Display my posts only')
     submit=SubmitField('Apply filters')
 
-class Application(FlaskForm):
-    # possibly add a section to contact the faculty who posted this app
-    withdraw = SubmitField('Withdraw')
-    apply = SubmitField('Apply')

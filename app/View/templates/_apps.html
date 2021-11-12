@@ -57,7 +57,9 @@
         </td>
         <td colspan="3" style = "text-align:center" valign="bottom">
             <br>
-            <!--APPLY BUTTON HERE-->
+            <form action="{{ url_for('routes.applyPost', postid = post.id)}}" method="post">
+                <input type="submit", value ="Apply"> <!-- class="likebtn" -->
+            </form>
         </td>
     </tr>
 </table>

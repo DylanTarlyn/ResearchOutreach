@@ -130,3 +130,9 @@ def setup():
     else:
         flash("You must be a student to view this page")
         return redirect(url_for('routes.home'))
+
+@bp_routes.route('/apply/<postid>', methods=['POST'])
+@login_required
+def applyPost(postid):
+    print(postid)
+    return redirect(url_for('routes.home'))
