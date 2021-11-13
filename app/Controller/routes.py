@@ -38,59 +38,29 @@ def index():
 #Home page, displays all research positions
 #Source for sorting by tags: https://docs.sqlalchemy.org/en/14/orm/tutorial.html
 
-#Issues with this: Cannot sort by two things at once, ie by oldest and by a tag. Can sort independently if either set to 
-# "Select Date" or "Select Topic". If both have values, it only sorts by whichever comes last since it overwrites the 
-# previously met condition. Not sure how to sort by two conditions
 @bp_routes.route('/home', methods=['GET','POST'])
 @login_required
 def home():
     user = current_user
     dSort=sortDate()
     rSort=SortTopics()
-    position=Post.query.order_by(sortdate())
+    topic = rSort.rTopics.data
     position = Post.query.order_by(Post.date1.desc())
     if dSort.validate_on_submit(): #Sorting
         if rSort.myposts.data==True: #Sorting by only their posts
             position=current_user.get_user_posts()
             if dSort.date.data=='Newest': 
-                position = current_user.get_user_posts().order_by(Post.date1.desc())
+                position = current_user.get_user_posts().filter(Post.research_field.any(
+                    Research.field==topic)).order_by(Post.date1.desc())
             if dSort.date.data=='Oldest': 
-                position = current_user.get_user_posts().order_by(Post.date1)
-            if rSort.rTopics.data == 'Test1':
-                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test1'))
-            if rSort.rTopics.data == 'Test2':
-                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test2'))
-            if rSort.rTopics.data == 'Test3':
-                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test3'))
-            if rSort.rTopics.data == 'Test4':
-                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test4'))
-            if rSort.rTopics.data == 'Test5':
-                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test5'))
+                position = current_user.get_user_posts().filter(Post.research_field.any(
+                    Research.field==topic)).order_by(Post.date1)
         else: #Sorting all posts
             if dSort.date.data == 'Newest':
-                position = Post.query.order_by(Post.date1.desc())
+                position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1.desc())
             if dSort.date.data == 'Oldest':
-                position = Post.query.order_by(Post.date1)
-            if rSort.rTopics.data == 'Test1':
-                position=Post.query.filter(Post.research_field.any(Research.field=='Test1'))
-            if rSort.rTopics.data == 'Test2':
-                position=Post.query.filter(Post.research_field.any(Research.field=='Test2'))
-            if rSort.rTopics.data == 'Test3':
-                position=Post.query.filter(Post.research_field.any(Research.field=='Test3'))
-            if rSort.rTopics.data == 'Test4':
-                position=Post.query.filter(Post.research_field.any(Research.field=='Test4'))
-            if rSort.rTopics.data == 'Test5':
-                position=Post.query.filter(Post.research_field.any(Research.field=='Test5'))
+                position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1)
     return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, user=user)
-
-def sortdate():
-    sort=sortDate()
-    return sort.date.data
-    
-def sorttopic():
-    sort=SortTopics()
-    return sort.rTopics.data
-
 
 #IMPORTANT
 # To change the tags that appear, go to research.py and edit them manually in line 15
