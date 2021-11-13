@@ -7,9 +7,15 @@
 
     {% block sort %}
     <form action="" method = "post">
-      {{ form.hidden_tag() }}
+      {{ dform.hidden_tag() }}
         <div class='formselect'>
-          <div>Sort by {{ form.choices }} {{form.myposts.label}}{{form.myposts}} {{ form.submit (class="button") }}</div> 
+          <div>Sort by {{ dform.date }} 
+            {{rform.rTopics}}
+            <br><br>
+            {% if user.usertype == 'faculty' %} <!-- Only displays "my posts" for faculty members-->
+            {{rform.myposts.label}}{{rform.myposts}}
+            {% endif %}
+             {{ rform.submit }}</div> 
         </div>
     </form>
   {% endblock %}

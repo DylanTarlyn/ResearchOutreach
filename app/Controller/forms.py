@@ -33,9 +33,12 @@ class EditForm(FlaskForm):
     email =  StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    sumbit = SubmitField('Submit')
+    submit = SubmitField('Submit')
+
+class sortDate(FlaskForm):
+    date=SelectField(choices=[('Select Date'),('Newest'),('Oldest')]) #Time filters
     
-class SortForm(FlaskForm):
-    choices=SelectField(choices=[('Newest'),('Oldest'),('Test1'),('Test2')])
+class SortTopics(FlaskForm):
+    rTopics=SelectField(choices=[('Select Topic'),('Test1'),('Test2'),('Test3'),('Test4'),('Test5')])#research topic fields
     myposts=BooleanField('Display my posts only')
     submit=SubmitField('Apply filters')

@@ -19,6 +19,8 @@
                 <td><a href="{{url_for('auth.logout')}}" class = "button"> Logout </a></td>
                 {% endif %}
                 <!-- Links for nav bar go here-->
+
+                <td> Logged in as:<span class="useritem">{{current_user.username}} </span> </td>  
             </tr>
         </table>
         </div>

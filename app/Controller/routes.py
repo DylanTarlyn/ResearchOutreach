@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.Model.models import Post, User, Research
-from app.Controller.forms import PositionForm, EditForm, SortForm
+from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
@@ -35,40 +35,61 @@ def index():
 #   feel free to use the facultyTest and studentTest html templates if you want to mess around with this
 
 
-# This route will display all of the posts
-# If the user is a student they can apply to posts
-# If the user is a faculty they can create new posts via a link in the navbar
-
-
 #Home page, displays all research positions
+#Source for sorting by tags: https://docs.sqlalchemy.org/en/14/orm/tutorial.html
+
+#Issues with this: Cannot sort by two things at once, ie by oldest and by a tag. Can sort independently if either set to 
+# "Select Date" or "Select Topic". If both have values, it only sorts by whichever comes last since it overwrites the 
+# previously met condition. Not sure how to sort by two conditions
 @bp_routes.route('/home', methods=['GET','POST'])
 @login_required
 def home():
-    #user = current_user
-    sort=SortForm()
-    position=Post.query.order_by(sortorder())
+    user = current_user
+    dSort=sortDate()
+    rSort=SortTopics()
+    position=Post.query.order_by(sortdate())
     position = Post.query.order_by(Post.date1.desc())
-    if sort.validate_on_submit(): #Sorting
-        if sort.myposts.data==True: #Sorting by only their posts
+    if dSort.validate_on_submit(): #Sorting
+        if rSort.myposts.data==True: #Sorting by only their posts
             position=current_user.get_user_posts()
-            if sort.choices.data=='Date': 
-                position = current_user.get_user_posts().order_by(Post.date1.desc()) #Newest
-            if sort.choices.data=='Date': 
-                position = current_user.get_user_posts().order_by(Post.date1) #Oldest
-            #if sort.choices.data=='Test2': 
-            #    position = current_user.get_user_posts().order_by(Post.research_field.contains('Test2')) #Sorting by tag
+            if dSort.date.data=='Newest': 
+                position = current_user.get_user_posts().order_by(Post.date1.desc())
+            if dSort.date.data=='Oldest': 
+                position = current_user.get_user_posts().order_by(Post.date1)
+            if rSort.rTopics.data == 'Test1':
+                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test1'))
+            if rSort.rTopics.data == 'Test2':
+                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test2'))
+            if rSort.rTopics.data == 'Test3':
+                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test3'))
+            if rSort.rTopics.data == 'Test4':
+                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test4'))
+            if rSort.rTopics.data == 'Test5':
+                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field=='Test5'))
         else: #Sorting all posts
-            if sort.choices.data == 'Newest':
+            if dSort.date.data == 'Newest':
                 position = Post.query.order_by(Post.date1.desc())
-            if sort.choices.data == 'Oldest':
+            if dSort.date.data == 'Oldest':
                 position = Post.query.order_by(Post.date1)
-            #if sort.choices.data == 'Test2':
-             #   position=Post.query.filter(Post.research_field.contains('Test2'))
-    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), form=sort)
+            if rSort.rTopics.data == 'Test1':
+                position=Post.query.filter(Post.research_field.any(Research.field=='Test1'))
+            if rSort.rTopics.data == 'Test2':
+                position=Post.query.filter(Post.research_field.any(Research.field=='Test2'))
+            if rSort.rTopics.data == 'Test3':
+                position=Post.query.filter(Post.research_field.any(Research.field=='Test3'))
+            if rSort.rTopics.data == 'Test4':
+                position=Post.query.filter(Post.research_field.any(Research.field=='Test4'))
+            if rSort.rTopics.data == 'Test5':
+                position=Post.query.filter(Post.research_field.any(Research.field=='Test5'))
+    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, user=user)
 
-def sortorder():
-    sort=SortForm()
-    return sort.choices.data
+def sortdate():
+    sort=sortDate()
+    return sort.date.data
+    
+def sorttopic():
+    sort=SortTopics()
+    return sort.rTopics.data
 
 
 #IMPORTANT
