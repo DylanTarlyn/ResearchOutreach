@@ -1,0 +1,38 @@
+<html>
+    <head>
+       {% if title %}
+          <title>{{ title }} - Research Outreach </title> <!--Update title -->
+       {% else %}
+          <title> Welcome to Research Outreach! </title>
+       {% endif %}
+       <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    </head>
+
+    <body>
+        <div class ="nav-container">
+        <table>
+            <tr>
+                {% if current_user.is_anonymous %}
+                <td><a href="{{ url_for('auth.login') }}" class = "button"> Login</a></td> 
+                {% else %}
+                <td><a href="{{url_for('routes.post')}}" class = "button"> Post Position </a></td>
+                <td><a href="{{url_for('auth.logout')}}" class = "button"> Logout </a></td>
+                {% endif %}
+                <!-- Links for nav bar go here-->
+            </tr>
+        </table>
+        </div>
+        <div>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class = flash-container> {{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            {% block content %} {% endblock %}
+        </div>
+
+    </body>
+</html>
