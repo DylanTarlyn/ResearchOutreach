@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, TextAreaField ,validators, DateField, PasswordField
+from wtforms import StringField, SubmitField, SelectField, TextAreaField ,validators, DateField, PasswordField, FloatField, IntegerField
 from wtforms.fields.core import BooleanField
 from wtforms.validators import  DataRequired, Length, Email, EqualTo
 from wtforms.widgets.core import TextArea
@@ -27,12 +27,29 @@ class PositionForm(FlaskForm):
     faculty_info = TextAreaField('Faculty’s name and contact information ', validators = [Length(min=1,max=1500)])
     submit = SubmitField('Post')
 
-class EditForm(FlaskForm):
+
+class SetupForm(FlaskForm):
     firstname =  StringField('First Name', validators=[DataRequired()])
     lastname =  StringField('Last Name', validators=[DataRequired()])
-    email =  StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    gpa = FloatField('GPA',validators=[DataRequired()])
+    phone = IntegerField('Phone Number',validators=[DataRequired()])
+    major = StringField('Major',validators=[DataRequired()])
+    graduation = DateField('Graduation', format='%m/%d/%Y',validators=[DataRequired()])
+    #researchtopic = StringField('Reasearh Topic',validators=[DataRequired()])
+    #programminglangauge = StringField('Programming Language',validators=[DataRequired()])
+    experience = TextAreaField('Experience')
+    submit = SubmitField('Submit')
+
+class EditForm(FlaskForm):
+    firstname =  StringField('First Name')
+    lastname =  StringField('Last Name')
+    gpa = FloatField('GPA')
+    phone = IntegerField('Phone Number')
+    major = StringField('Major')
+    graduation = DateField('Graduation', format='%m/%d/%Y')
+    #researchtopic = StringField('Reasearh Topic',validators=[DataRequired()])
+    #programminglangauge = StringField('Programming Language',validators=[DataRequired()])
+    experience = TextAreaField('Experience')
     submit = SubmitField('Submit')
 
 class sortDate(FlaskForm):

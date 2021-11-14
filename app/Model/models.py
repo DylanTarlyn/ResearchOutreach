@@ -47,6 +47,15 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     usertype = db.Column(db.String(10))
     posts = db.relationship('Post', backref='writer', lazy='dynamic')
+    firstname=db.Column(db.String(30))
+    lastname=db.Column(db.String(30))
+    phone =  db.Column(db.Integer)
+    gpa = db.Column(db.Float)
+    major =  db.Column(db.String(30))
+    graduation = db.Column(db.DateTime)
+    # researchtopic = db.Column(db.String(100)) #should be like tags
+   # programminglangauge = db.Column(db.String(50)) #should be like tags
+    experience = db.Column(db.String(300))
 
 
     def set_password(self, password):
@@ -60,31 +69,3 @@ class User(UserMixin, db.Model):
 
     def get_user_posts(self):
         return self.posts
-
-class Student(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    student_firstname =  db.Column(db.String(64))
-    student_lastname =  db.Column(db.String(64))
-    student_GPA = db.Column(db.Float(10))
-    student_phone =  db.Column(db.Integer())
-    student_major =  db.Column(db.String(30))
-    student_graduation = db.Column(db.String(100))
-    student_researchtopic = db.Column(db.String(100))
-    student_programminglangauge = db.Column(db.String(50))
-    student_experience = db.Column(db.String(64))
-
-    def __repr__(self):
-        return '<User ({},{},{},{},{},{},{},{},{},{})', format(self.id,self.student_firstname,self.student_lastname,self.student_GPA,self.stduent_phone,
-        self.student_major,self.student_graduation,self.student_researchtopic,self.student_programminglangauge,self.student_experience)
-
-class Faculty(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    faculty_firstname =  db.Column(db.String(64))
-    faculty_lastname =  db.Column(db.String(64))
-    faculty_ID = db.Column(db.Integer())
-    faculty_phone = db.Column(db.Integer())
-
-    def __repr__(self):
-        return '<User ({},{},{},{},{})', format(self.id,self.faculty_firstname,self.faculty_lastname,self.faculty_ID,self.faculty_phone)
-
-

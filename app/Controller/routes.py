@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.Model.models import Post, User, Research
-from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics
+from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics, SetupForm
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
@@ -89,35 +89,62 @@ def post():
             db.session.add(newpost)
             db.session.commit()
             flash('Reseach position has been posted '+ newpost.project_title)
-            return redirect(url_for('routes.index'))
+            return redirect(url_for('routes.home'))
         return render_template('_post.html', title="Home", form=hform)
 
-#If the user registers as a student, they are immediately sent here to finish setting up profile
-#@bp_routes.route('/setup', methods=['GET','POST'])
-#@login_required
-#def setup():
-#    user = current_user
-#    if user.usertype=='student':
-#        return render_template('setup.html')
-#    else:
-#        flash("You must be a student to view this page")
-#        return redirect(url_for('routes.home'))
+#Should probably move below to auth routes
 
 @bp_routes.route('/setup', methods=['GET','POST'])
 @login_required
 def setup():
-    eform = EditForm()
+    eform = SetupForm()
     user = current_user
     if user.usertype=='student':
         if eform.validate_on_submit():
-            user.firstname = eform.firstname.data
-            user.lastname = eform.lastname.data
-            user.email = eform.email.data
-            user.set_password = eform.set_password .data
+            user.firstname=eform.firstname.data
+            user.lastname=eform.lastname.data
+            user.phone=eform.phone.data
+            user.gpa=eform.gpa.data
+            user.major=eform.major.data
+            user.graduation=eform.graduation.data
+            user.experience=eform.experience.data
             db.session.add(user)
             db.session.commit()
             flash("Your account has been updated")
-        return render_template('setup.html', form = eform)
-    else:
+            return redirect(url_for('routes.home'))
+        else:
+            flash("didnt work")
+
+    if user.usertype=='faculty':
         flash("You must be a student to view this page")
         return redirect(url_for('routes.home'))
+
+    return render_template('setup.html', form = eform)
+
+@bp_routes.route('/edit', methods=['GET','POST'])
+@login_required
+def edit():
+    eform =EditForm()
+    user=current_user
+    if request.method == 'POST': #For updating
+        if eform.validate_on_submit():
+            user.firstname=eform.firstname.data
+            user.lastname=eform.lastname.data
+            user.phone=eform.phone.data
+            user.gpa=eform.gpa.data
+            user.major=eform.major.data
+            user.graduation=eform.graduation.data
+            user.experience=eform.experience.data
+            db.session.add(user)
+            db.session.commit()
+            flash("Your account has been updated")
+    if request.method == 'GET': #For autofilling info
+        eform.firstname.data=user.firstname
+        eform.lastname.data=user.lastname
+        eform.phone.data=user.phone
+        eform.gpa.data=user.gpa
+        eform.major.data=user.major
+        eform.graduation.data=user.graduation
+        eform.experience.data=user.experience
+
+    return render_template('myprofile.html', form = eform, user=user)

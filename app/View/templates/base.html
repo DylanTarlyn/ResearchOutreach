@@ -15,12 +15,16 @@
                 {% if current_user.is_anonymous %}
                 <td><a href="{{ url_for('auth.login') }}" class = "button"> Login</a></td> 
                 {% else %}
+                <td><a href="{{url_for('routes.home')}}" class = "button"> Home </a></td> 
+                    {% if current_user.usertype == 'faculty' %}
                 <td><a href="{{url_for('routes.post')}}" class = "button"> Post Position </a></td>
+                    {%  endif %}     
+                <td><a href="{{url_for('routes.edit')}}" class = "button"> Edit Profile </a></td>    
                 <td><a href="{{url_for('auth.logout')}}" class = "button"> Logout </a></td>
+                <td> Logged in as:<span class="useritem">{{current_user.username}} </span> </td>  
                 {% endif %}
                 <!-- Links for nav bar go here-->
 
-                <td> Logged in as:<span class="useritem">{{current_user.username}} </span> </td>  
             </tr>
         </table>
         </div>
