@@ -18,11 +18,32 @@ research_tag = db.Table('research_tag',
     db.Column('research_id', db.Integer, db.ForeignKey('research.id'))
     )
 
+user_research=db.Table('user_research_tag',
+    db.Column('user_id',db.Integer,db.ForeignKey('user.id')),
+    db.Column('research_id', db.Integer, db.ForeignKey('research.id'))
+)   
+
 class Research(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     field = db.Column(db.String(30))
     def __repr__(self):
         return '<Post ({},{})', format(self.id,self.field)
+
+class Language(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    field = db.Column(db.String(30))
+
+language_tag=db.Table('language_tag',
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+    db.Column('language_id', db.Integer, db.ForeignKey('language.id'))
+    )
+
+user_language=db.Table('user_language',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('language_id', db.Integer, db.ForeignKey('language.id'))
+    )
+
+
 
 
 class Post(db.Model):
@@ -33,12 +54,16 @@ class Post(db.Model):
     date2 = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     time = db.Column(db.Integer)
     research_field = db.relationship('Research', secondary = research_tag, primaryjoin=(research_tag.c.post_id == id), backref = db.backref('research_tag', lazy='dynamic'), lazy ='dynamic')
+    language_field = db.relationship('Language', secondary = language_tag, primaryjoin=(language_tag.c.post_id == id), backref = db.backref('language_tag', lazy='dynamic'), lazy ='dynamic')
     requirements = db.Column(db.String(300))
     faculty_info = db.Column(db.String(200))
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'))
     
     def get_tags(self):
         return self.research_field
+    
+    def get_lang(self):
+        return self.language_field
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,8 +78,8 @@ class User(UserMixin, db.Model):
     gpa = db.Column(db.Float)
     major =  db.Column(db.String(30))
     graduation = db.Column(db.DateTime)
-    # researchtopic = db.Column(db.String(100)) #should be like tags
-   # programminglangauge = db.Column(db.String(50)) #should be like tags
+    research_field = db.relationship('Research', secondary = user_research, primaryjoin=(user_research.c.user_id == id), backref = db.backref('user_research', lazy='dynamic'), lazy ='dynamic')
+    language_field = db.relationship('Language', secondary = user_language, primaryjoin=(user_language.c.user_id == id), backref = db.backref('user_language', lazy='dynamic'), lazy ='dynamic')
     experience = db.Column(db.String(300))
 
 

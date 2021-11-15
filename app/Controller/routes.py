@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.Model.models import Post, User, Research
-from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics, SetupForm
+from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics, SetupForm, SortLangauages
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
@@ -44,6 +44,7 @@ def home():
     user = current_user
     dSort=sortDate()
     rSort=SortTopics()
+    lsort = SortLangauages()
     topic = rSort.rTopics.data
     position = Post.query.order_by(Post.date1.desc())
     if dSort.validate_on_submit(): #Sorting
@@ -60,10 +61,16 @@ def home():
                 position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1.desc())
             if dSort.date.data == 'Oldest':
                 position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1)
+    if lsort.validate_on_submit():
+        #multi sort both researach topics and languages that match the research topics and languages for the user
+        #Query the table for research fields and language fields where they == user research and language research 
+        # (See models.py)
+        pass
     return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, user=user)
 
+
 #IMPORTANT
-# To change the tags that appear, go to research.py and edit them manually in line 15
+# To change the topics and languages that appear, go to research.py and edit them manually in line 15
 # Be sure to delete db file everytime you do this since you are editing the db schema, otherwise it will not appear
 
 @bp_routes.route('/post', methods=['GET','POST'])
@@ -86,9 +93,12 @@ def post():
             research_field = hform.research.data
             for t in research_field:
                 newpost.research_field.append(t)
+            language_field = hform.language.data
+            for l in language_field:
+                newpost.language_field.append(l)
             db.session.add(newpost)
             db.session.commit()
-            flash('Reseach position has been posted '+ newpost.project_title)
+            flash('Research position '+ newpost.project_title + ' has been posted')
             return redirect(url_for('routes.home'))
         return render_template('_post.html', title="Home", form=hform)
 
@@ -108,13 +118,18 @@ def setup():
             user.major=eform.major.data
             user.graduation=eform.graduation.data
             user.experience=eform.experience.data
+
+            research_field = eform.research.data
+            for t in research_field:
+                user.research_field.append(t)
+            language_field = eform.language.data
+            for l in language_field:
+                user.language_field.append(l)
+
             db.session.add(user)
             db.session.commit()
             flash("Your account has been updated")
             return redirect(url_for('routes.home'))
-        else:
-            flash("didnt work")
-
     if user.usertype=='faculty':
         flash("You must be a student to view this page")
         return redirect(url_for('routes.home'))
@@ -135,6 +150,14 @@ def edit():
             user.major=eform.major.data
             user.graduation=eform.graduation.data
             user.experience=eform.experience.data
+
+            research_field = eform.research.data
+            for t in research_field:
+                user.research_field.append(t)
+            language_field = eform.language.data
+            for l in language_field:
+                user.language_field.append(l)
+
             db.session.add(user)
             db.session.commit()
             flash("Your account has been updated")
@@ -146,5 +169,6 @@ def edit():
         eform.major.data=user.major
         eform.graduation.data=user.graduation
         eform.experience.data=user.experience
+
 
     return render_template('myprofile.html', form = eform, user=user)

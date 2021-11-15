@@ -6,7 +6,7 @@ from wtforms.widgets.core import TextArea
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from wtforms.widgets import ListWidget, CheckboxInput
 
-from app.Model.models import Research
+from app.Model.models import Research, Language
 
 
 def get_research():
@@ -15,6 +15,12 @@ def get_research():
 def get_researchlabel(theresearch):
     return theresearch.field
 
+def get_language():
+    return Language.query.all()
+
+def get_languagelabel(thelanguage):
+    return thelanguage.field
+
 
 class PositionForm(FlaskForm):
     project_title = StringField('Title of project', validators=[DataRequired()])
@@ -22,7 +28,8 @@ class PositionForm(FlaskForm):
     date1 = DateField('Start date', format='%m/%d/%Y')
     date2 = DateField('End date', format='%m/%d/%Y')
     time = StringField('How many hours would you like to work?', validators = [DataRequired()])
-    research = QuerySelectMultipleField('Fields', query_factory = get_research, get_label = get_researchlabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
+    research = QuerySelectMultipleField('Research Topics', query_factory = get_research, get_label = get_researchlabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
+    language = QuerySelectMultipleField('Programming Languages', query_factory = get_language, get_label = get_languagelabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
     requirements = StringField('A brief description of the required qualifications', validators=[DataRequired()])
     faculty_info = TextAreaField('Faculty’s name and contact information ', validators = [Length(min=1,max=1500)])
     submit = SubmitField('Post')
@@ -35,8 +42,8 @@ class SetupForm(FlaskForm):
     phone = IntegerField('Phone Number',validators=[DataRequired()])
     major = StringField('Major',validators=[DataRequired()])
     graduation = DateField('Graduation', format='%m/%d/%Y',validators=[DataRequired()])
-    #researchtopic = StringField('Reasearh Topic',validators=[DataRequired()])
-    #programminglangauge = StringField('Programming Language',validators=[DataRequired()])
+    research = QuerySelectMultipleField('Research Topics', query_factory = get_research, get_label = get_researchlabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
+    language = QuerySelectMultipleField('Programming Languages', query_factory = get_language, get_label = get_languagelabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
     experience = TextAreaField('Experience')
     submit = SubmitField('Submit')
 
@@ -47,8 +54,8 @@ class EditForm(FlaskForm):
     phone = IntegerField('Phone Number')
     major = StringField('Major')
     graduation = DateField('Graduation', format='%m/%d/%Y')
-    #researchtopic = StringField('Reasearh Topic',validators=[DataRequired()])
-    #programminglangauge = StringField('Programming Language',validators=[DataRequired()])
+    research = QuerySelectMultipleField('Research Topics', query_factory = get_research, get_label = get_researchlabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
+    language = QuerySelectMultipleField('Programming Languages', query_factory = get_language, get_label = get_languagelabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
     experience = TextAreaField('Experience')
     submit = SubmitField('Submit')
 
@@ -59,3 +66,6 @@ class SortTopics(FlaskForm):
     rTopics=SelectField(choices=[('Select Topic'),('Test1'),('Test2'),('Test3'),('Test4'),('Test5')])#research topic fields
     myposts=BooleanField('Display my posts only')
     submit=SubmitField('Apply filters')
+
+class SortLangauages(FlaskForm):
+    language=SelectField(choices=[('Select Topic'),('Test1'),('Test2'),('Test3'),('Test4'),('Test5')])#programming languages
