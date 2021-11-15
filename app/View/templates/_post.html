@@ -1,14 +1,15 @@
+<html style="background-image:url('/static/img/white.jpg');">
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Post</h1>
+    <h1>New Research Position</h1>
     {% if form %}
         <form action = "" method = "post">
             {{ form.hidden_tag()}}
 
         <div class = "forminput" >
             
-            <br> {{form.project_title.label}} <br> {{form.project_title(class = "forminput")}}
+             {{form.project_title.label}} <br> {{form.project_title(class = "forminput")}}
             <br> {{form.description.label}} <br> {{form.description(class = "forminput")}}
             <br> {{form.date1.label}} <br> {{form.date1(class = "forminput")}}
             <br> {{form.date2.label}} <br> {{form.date2(class = "forminput")}}
@@ -16,7 +17,6 @@
             <br> {{form.requirements.label}} <br> {{form.requirements(class="forminput")}}
             <br> {{form.research.label}} <br> {{form.research(class = "forminput")}}
             <br> {{form.language.label}} <br> {{form.language(class = "forminput")}}
-            <br> {{form.faculty_info.label}} <br> {{form.faculty_info(class = "forminput")}}
             <br><br>{{form.submit}}
 
         </div>
@@ -24,3 +24,5 @@
 
 
 {% endblock %}
+
+</html>

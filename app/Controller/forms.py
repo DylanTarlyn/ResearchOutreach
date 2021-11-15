@@ -31,7 +31,7 @@ class PositionForm(FlaskForm):
     research = QuerySelectMultipleField('Research Topics', query_factory = get_research, get_label = get_researchlabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
     language = QuerySelectMultipleField('Programming Languages', query_factory = get_language, get_label = get_languagelabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
     requirements = StringField('A brief description of the required qualifications', validators=[DataRequired()])
-    faculty_info = TextAreaField('Faculty’s name and contact information ', validators = [Length(min=1,max=1500)])
+    faculty_info = TextAreaField('Faculty’s name and contact information ')
     submit = SubmitField('Post')
 
 
@@ -41,7 +41,7 @@ class SetupForm(FlaskForm):
     gpa = FloatField('GPA',validators=[DataRequired()])
     phone = IntegerField('Phone Number',validators=[DataRequired()])
     major = StringField('Major',validators=[DataRequired()])
-    graduation = DateField('Graduation', format='%m/%d/%Y',validators=[DataRequired()])
+    graduation = DateField('Graduation Date', format='%m/%d/%Y',validators=[DataRequired()])
     research = QuerySelectMultipleField('Research Topics', query_factory = get_research, get_label = get_researchlabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
     language = QuerySelectMultipleField('Programming Languages', query_factory = get_language, get_label = get_languagelabel, widget = ListWidget(prefix_label=False),option_widget = CheckboxInput())
     experience = TextAreaField('Experience')
