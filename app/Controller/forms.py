@@ -63,9 +63,9 @@ class sortDate(FlaskForm):
     date=SelectField(choices=[('Select Date'),('Newest'),('Oldest')]) #Time filters
     
 class SortTopics(FlaskForm):
-    rTopics=SelectField(choices=[('Select Topic'),('Test1'),('Test2'),('Test3'),('Test4'),('Test5')])#research topic fields
+    rTopics=SelectField(choices=[('Select Topic'),('Topic1'),('Topic2'),('Topic3'),('Topic4'),('Topic5')])#research topic fields
     myposts=BooleanField('Display my posts only')
     submit=SubmitField('Apply filters')
 
 class SortLangauages(FlaskForm):
-    language=SelectField(choices=[('Select Topic'),('Test1'),('Test2'),('Test3'),('Test4'),('Test5')])#programming languages
+    language=SelectField(choices=[('Select Language'),('Lang1'),('Lang2'),('Lang3'),('Lang4'),('Lang5')])#programming languages

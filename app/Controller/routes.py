@@ -44,24 +44,47 @@ def home():
     user = current_user
     dSort=sortDate()
     rSort=SortTopics()
-    lsort = SortLangauages()
-    topic = rSort.rTopics.data
+    lSort = SortLangauages()
+    topic = rSort.rTopics.data #use for sorting by topic
+    language = lSort.language.data #use for sorting by language
     position = Post.query.order_by(Post.date1.desc())
     if dSort.validate_on_submit(): #Sorting
         if rSort.myposts.data==True: #Sorting by only their posts
             position=current_user.get_user_posts()
+            if dSort.date.data=='Select Date':
+                if rSort.rTopics.data == 'Select Topic':
+                    position = current_user.get_user_posts().order_by(Post.date1.desc())
+                else:
+                    position = current_user.get_user_posts().filter(Post.research_field.any(
+                        Research.field==topic)).order_by(Post.date1.desc())
             if dSort.date.data=='Newest': 
-                position = current_user.get_user_posts().filter(Post.research_field.any(
-                    Research.field==topic)).order_by(Post.date1.desc())
+                if rSort.rTopics.data == 'Select Topic':
+                    position = current_user.get_user_posts().order_by(Post.date1.desc())
+                else:
+                    position = current_user.get_user_posts().filter(Post.research_field.any(
+                        Research.field==topic)).order_by(Post.date1.desc())
             if dSort.date.data=='Oldest': 
-                position = current_user.get_user_posts().filter(Post.research_field.any(
-                    Research.field==topic)).order_by(Post.date1)
+                if rSort.rTopics.data == 'Select Topic':
+                    position = current_user.get_user_posts().order_by(Post.date1)
+                else:
+                    position = current_user.get_user_posts().filter(Post.research_field.any(
+                        Research.field==topic)).order_by(Post.date1)
         else: #Sorting all posts
+            if dSort.date.data=='Select Date':
+                if rSort.rTopics.data == 'Select Topic':
+                    position=Post.query.order_by(Post.date1.desc())
+                else:        
+                    position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1.desc())
             if dSort.date.data == 'Newest':
-                position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1.desc())
+                if rSort.rTopics.data == 'Select Topic':
+                    position=Post.query.order_by(Post.date1.desc())
+                else:        
+                    position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1.desc())
             if dSort.date.data == 'Oldest':
-                position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1)
-    if lsort.validate_on_submit():
+                if rSort.rTopics.data == 'Select Topic':
+                    position=Post.query.order_by(Post.date1)
+                else:
+                    position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1)
         #multi sort both researach topics and languages that match the research topics and languages for the user
         #Query the table for research fields and language fields where they == user research and language research 
         # (See models.py)
