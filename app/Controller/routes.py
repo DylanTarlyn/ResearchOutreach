@@ -94,9 +94,10 @@ def suggested():
     dSort=sortDate()
     rSort=SortTopics()
     lSort = SortLangauages()
-    topic = rSort.rTopics.data #use for sorting by topic
-    language = lSort.language.data #use for sorting by language
-    position = Post.query.order_by(Post.date1.desc())  
+
+    #PUT QUERY FOR POSTS HERE (place holder used)
+    position=Post.query.order_by(Post.date1.desc())
+
         #multi sort both researach topics and languages that match the research topics and languages for the user
         #Query the table for research fields and language fields where they == user research and language research 
         # (See models.py and the sorting above) 
@@ -171,7 +172,7 @@ def setup():
 
     return render_template('setup.html', form = eform)
 
-@bp_routes.route('/edit', methods=['GET','POST'])
+@bp_routes.route('/edit', methods=['GET','POST','DELETE'])
 @login_required
 def edit():
     eform =EditForm()
@@ -185,6 +186,18 @@ def edit():
             user.major=eform.major.data
             user.graduation=eform.graduation.data
             user.experience=eform.experience.data
+
+            #remove tags otherwise more will just be added to existing
+            if user:
+                research_field=user.research_field.all()
+                for t in research_field:
+                    user.research_field.remove(t)
+                db.session.commit()
+
+                language_field=user.language_field.all()
+                for t in language_field:
+                    user.language_field.remove(t)
+                db.session.commit()
 
             research_field = eform.research.data
             for t in research_field:

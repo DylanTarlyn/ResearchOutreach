@@ -82,6 +82,11 @@ class User(UserMixin, db.Model):
     language_field = db.relationship('Language', secondary = user_language, primaryjoin=(user_language.c.user_id == id), backref = db.backref('user_language', lazy='dynamic'), lazy ='dynamic')
     experience = db.Column(db.String(300))
 
+    def get_user_tags(self):
+        return self.research_field
+    
+    def get_user_lang(self):
+        return self.language_field
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
