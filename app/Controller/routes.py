@@ -85,10 +85,22 @@ def home():
                     position=Post.query.order_by(Post.date1)
                 else:
                     position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1)
+    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, user=user)
+
+@bp_routes.route('/suggested', methods=['GET','POST'])
+@login_required
+def suggested(): 
+    user = current_user
+    dSort=sortDate()
+    rSort=SortTopics()
+    lSort = SortLangauages()
+    topic = rSort.rTopics.data #use for sorting by topic
+    language = lSort.language.data #use for sorting by language
+    position = Post.query.order_by(Post.date1.desc())  
         #multi sort both researach topics and languages that match the research topics and languages for the user
         #Query the table for research fields and language fields where they == user research and language research 
-        # (See models.py)
-        pass
+        # (See models.py and the sorting above) 
+
     return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, user=user)
 
 
