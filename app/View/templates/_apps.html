@@ -70,6 +70,16 @@
         <td colspan="3" style = "text-align:center" valign="bottom">  
             <br>
               <span class = "useritem"> Position posted by {{post.writer.username}} </span>  
+            <br>
+            {% if current_user.usertype == 'student' and not current_user.is_applied(post) %}
+            <form action="{{ url_for('routes.applyPost', postid = post.id)}}" method="post">
+                <input type="submit", value ="Apply"> <!-- class="likebtn" -->
+            </form>
+            {%elif current_user.usertype == 'student' and current_user.is_applied(post) %}
+            <form action="{{ url_for('routes.withdrawPost', postid = post.id)}}" method="post">
+                <input type="submit", value ="Withdraw"> <!-- class="likebtn" -->
+            </form>
+            {%endif%}
         </td>
     </tr>
 </table>

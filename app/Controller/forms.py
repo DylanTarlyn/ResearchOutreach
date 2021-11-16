@@ -69,3 +69,8 @@ class SortTopics(FlaskForm):
 
 class SortLangauages(FlaskForm):
     language=SelectField(choices=[('Select Topic'),('Test1'),('Test2'),('Test3'),('Test4'),('Test5')])#programming languages
+
+class ApplyForm(FlaskForm):
+    statement =  StringField('Why are you interested in this position?', validators=[Length(min=1,max=400), DataRequired()])
+    reference =  StringField('List at least one faculty reference', validators=[DataRequired()])
+    apply = SubmitField('Apply')
