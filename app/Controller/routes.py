@@ -96,7 +96,9 @@ def suggested():
     lSort = SortLangauages()
 
     #PUT QUERY FOR POSTS HERE (place holder used)
-    position=Post.query.order_by(Post.date1.desc())
+    #If the user tags contains x, filter x
+    #If it contains x and y, filter x and y
+    position = Post.query.filter(Post.research_field.any(Research.field=='Topic1'))
 
         #multi sort both researach topics and languages that match the research topics and languages for the user
         #Query the table for research fields and language fields where they == user research and language research 

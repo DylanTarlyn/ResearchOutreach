@@ -25,6 +25,28 @@
 
     {% endif %}
 
-
+    <tr> 
+        <td colspan="3" style = "text-align:center" valign="bottom">  
+            <br>
+            <!-- include tags here -->
+            {% for tag in user.get_user_tags().all() %}
+                    <span class="tagitem">
+                        {{tag.field}}
+                    </span>
+                {% endfor %}
+        </td>
+    </tr>
+    
+    <tr> 
+        <td colspan="3" style = "text-align:center" valign="bottom">  
+            <br>
+            <!-- include tags here -->
+            {% for tag in user.get_user_lang().all() %}
+                    <span class="tagitem">
+                       {{tag.field}}
+                    </span>
+                {% endfor %}
+        </td>
+    </tr>
 {% endblock %}
 </html>

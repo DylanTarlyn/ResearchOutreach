@@ -26,8 +26,6 @@ user_research=db.Table('user_research_tag',
 class Research(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     field = db.Column(db.String(30))
-    def __repr__(self):
-        return '<Post ({},{})', format(self.id,self.field)
 
 class Language(db.Model):
     id = db.Column(db.Integer, primary_key = True)
