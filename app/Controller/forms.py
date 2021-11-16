@@ -74,3 +74,6 @@ class ApplyForm(FlaskForm):
     statement =  StringField('Why are you interested in this position?', validators=[Length(min=1,max=400), DataRequired()])
     reference =  StringField('List at least one faculty reference', validators=[DataRequired()])
     apply = SubmitField('Apply')
+
+class sortRecommended(FlaskForm):
+    recommended=SelectField(choices=[('Show all posts'),('Show recommended posts')])

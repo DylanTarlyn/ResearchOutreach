@@ -12,6 +12,9 @@
         <div class='formselect'>
           <div>Sort by {{ dform.date }} 
             {{rform.rTopics}}
+            {% if user.usertype == 'student' %}
+            {{sform.recommended}}
+            {% endif %}
             <br><br>
             {% if user.usertype == 'faculty' %} <!-- Only displays "my posts" for faculty members-->
             {{rform.myposts.label}}{{rform.myposts}}

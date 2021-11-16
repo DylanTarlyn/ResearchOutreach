@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.Model.models import Post, User, Research
-from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics, SetupForm, SortLangauages, ApplyForm
+from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics, SetupForm, SortLangauages, ApplyForm, sortRecommended
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
@@ -42,9 +42,13 @@ def index():
 @login_required
 def home():
     user = current_user
+    print(user.get_user_tags().all())
+    for iter in user.research_field:
+        print(iter.user_research)
     dSort=sortDate()
     rSort=SortTopics()
     lSort = SortLangauages()
+    sSort = sortRecommended()
     topic = rSort.rTopics.data #use for sorting by topic
     language = lSort.language.data #use for sorting by language
     position = Post.query.order_by(Post.date1.desc())
@@ -85,24 +89,25 @@ def home():
                     position=Post.query.order_by(Post.date1)
                 else:
                     position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1)
-    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, user=user)
+    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, sform=sSort, user=user)
 
 @bp_routes.route('/suggested', methods=['GET','POST'])
 @login_required
 def suggested(): 
-    user = current_user
-    dSort=sortDate()
-    rSort=SortTopics()
-    lSort = SortLangauages()
+    return redirect(url_for('routes.home'))
+    #user = current_user
+    #dSort=sortDate()
+    #rSort=SortTopics()
+    #lSort = SortLangauages()
 
     #PUT QUERY FOR POSTS HERE (place holder used)
-    position=Post.query.order_by(Post.date1.desc())
+    #position=Post.query.order_by(Post.date1.desc())
 
         #multi sort both researach topics and languages that match the research topics and languages for the user
         #Query the table for research fields and language fields where they == user research and language research 
         # (See models.py and the sorting above) 
 
-    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, user=user)
+   # return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), sform = None, dform=dSort, rform=rSort, user=user)
 
 
 #IMPORTANT
@@ -175,9 +180,9 @@ def setup():
 @bp_routes.route('/edit', methods=['GET','POST','DELETE'])
 @login_required
 def edit():
-    eform =EditForm()
+    eform = EditForm()
     user=current_user
-    if request.method == 'POST': #For updating
+    if request.method == 'POST': #For updating\
         if eform.validate_on_submit():
             user.firstname=eform.firstname.data
             user.lastname=eform.lastname.data
