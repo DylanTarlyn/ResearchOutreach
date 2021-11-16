@@ -119,6 +119,9 @@ def post():
         return redirect(url_for('routes.home'))
     else:
         hform = PositionForm()
+        if user.firstname is None:
+                flash('Please finish setting up your profile before creating a position')
+                return redirect(url_for('routes.edit'))
         if hform.validate_on_submit():
             newpost = Post(project_title = hform.project_title.data,
             description = hform.description.data,
