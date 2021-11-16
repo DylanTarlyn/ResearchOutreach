@@ -76,6 +76,7 @@ class User(UserMixin, db.Model):
     gpa = db.Column(db.Float)
     major =  db.Column(db.String(30))
     graduation = db.Column(db.DateTime)
+    apps = db.relationship('Apply', back_populates = 'studentenrolled')
     research_field = db.relationship('Research', secondary = user_research, primaryjoin=(user_research.c.user_id == id), backref = db.backref('user_research', lazy='dynamic'), lazy ='dynamic')
     language_field = db.relationship('Language', secondary = user_language, primaryjoin=(user_language.c.user_id == id), backref = db.backref('user_language', lazy='dynamic'), lazy ='dynamic')
     experience = db.Column(db.String(300))
@@ -97,3 +98,62 @@ class User(UserMixin, db.Model):
 
     def get_user_posts(self):
         return self.posts
+    
+    def withdraw(self, oldapp):
+        if self.is_applied(oldapp):
+            oldApplication = Apply.query.filter_by(studentid=self.id).filter_by(appid=oldapp.id).first()
+            db.session.delete(oldApplication)
+            db.session.commit()
+    
+    def apply(self, newapp):
+        if not self.is_applied(newapp):
+            newApplication = Apply(appenrolled = newapp)
+            self.apps.append(newApplication)
+            db.session.commit()
+
+    def is_applied(self, newapp): # checks to see if the student is enrolled in newclass
+        return (Apply.query.filter_by(studentid=self.id).filter_by(appid=newapp.id).count() > 0)
+
+    def applied_apps(self):
+        return self.apps
+    
+    def get_status(self, theapp):
+        if self.is_applied(theapp):
+            return Apply.query.filter_by(studentid=self.id).filter_by(appid=theapp.id).first().status
+        else:
+            return None
+    
+    def set_status(self, theapp, newstatus):
+        if self.is_applied(theapp):
+            Apply.query.filter_by(studentid=self.id).filter_by(appid=theapp.id).first().status = newstatus
+            db.session.commit()
+    
+    def set_statement(self, theapp, statement):
+        if self.is_applied(theapp):
+            Apply.query.filter_by(studentid=self.id).filter_by(appid=theapp.id).first().statement = statement
+            db.session.commit()
+
+    def set_reference(self, theapp, reference):
+        if self.is_applied(theapp):
+            Apply.query.filter_by(studentid=self.id).filter_by(appid=theapp.id).first().reference = reference
+            db.session.commit()
+    
+    def get_statement(self, theapp):
+        return Apply.query.filter_by(studentid=self.id).filter_by(appid=theapp.id).first().statement
+        
+    def get_reference(self, theapp):
+        return Apply.query.filter_by(studentid=self.id).filter_by(appid=theapp.id).first().reference
+
+
+class Apply(db.Model):
+    studentid = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True)
+    appid = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key = True)
+    status = db.Column(db.String(120), default = "Pending")
+    enrolldate = db.Column(db.DateTime, default = datetime.utcnow)
+    statement = db.Column(db.String(400))
+    reference = db.Column(db.String(400))
+    studentenrolled = db.relationship('User')
+    appenrolled = db.relationship('Post')
+    def __repr__(self):
+        return '<Enrollment app: {} Student: {} Date: {}>'.format(self.appenrolled, self.studentenrolled, self.enrolldate)
+

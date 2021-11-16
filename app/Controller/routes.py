@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.Model.models import Post, User, Research
-from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics, SetupForm, SortLangauages
+from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics, SetupForm, SortLangauages, ApplyForm
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
@@ -219,6 +219,44 @@ def edit():
         eform.major.data=user.major
         eform.graduation.data=user.graduation
         eform.experience.data=user.experience
-
-
     return render_template('myprofile.html', form = eform, user=user)
+
+@bp_routes.route('/apply/<postid>', methods=['POST'])
+@login_required
+def applyPost(postid):
+    post = Post.query.filter_by(id=postid).first()
+    if not current_user.is_applied(post):
+        applyform = ApplyForm()
+        if applyform.validate_on_submit():
+            current_user.apply(post)
+            current_user.set_statement(post, applyform.statement.data)
+            current_user.set_reference(post, applyform.reference.data)
+            flash('You applied to {}!'.format(post.project_title))
+            return redirect(url_for('routes.home'))
+        return render_template('apply.html', form = applyform, post = post)
+    else:
+        flash("You already applied to this application!")
+        return redirect(url_for('routes.home'))
+
+@bp_routes.route('/withdraw/<postid>', methods = ['POST'])
+@login_required
+def withdrawPost(postid):
+    post = Post.query.filter_by(id=postid).first()
+    if current_user.is_applied(post):
+        current_user.withdraw(post)
+        db.session.commit()
+        flash('You have successfully withdrawed from {}!'.format(post.project_title))
+        return redirect(url_for('routes.index'))
+    else:
+        flash('You have not applied to this application!')
+
+@bp_routes.route('/submittedapps', methods=['GET'])
+@login_required
+def submittedapps():
+    print(current_user.applied_apps())
+    if current_user.applied_apps() != []:
+        return render_template('submittedapps.html')
+    else:
+        flash('You have not submitted any applications!')
+    return redirect(url_for('routes.index'))
+        

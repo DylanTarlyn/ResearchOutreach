@@ -17,6 +17,7 @@ def initDB(*args, **kwargs):
         for l in language_field:
             db.session.add(Language(field=l))
             db.session.commit()
+   
 
 if __name__ == "__main__":
     app.run(debug=True)
