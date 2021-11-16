@@ -20,11 +20,14 @@
                 <td><a href="{{url_for('routes.home')}}" class = "button"> Home </a></td> 
                     {% if current_user.usertype == 'faculty' %}
                 <td><a href="{{url_for('routes.post')}}" class = "button"> Post Position </a></td>
-                    {%  endif %}     
+                    {% elif current_user.usertype == 'student' %}
+                <td><a href="{{ url_for('routes.submittedapps') }}" class = "button"> Submitted Applications</a></td> 
+                    {% endif %}
                 <td><a href="{{url_for('routes.edit')}}" class = "button"> Edit Profile </a></td>    
                 <td><a href="{{url_for('auth.logout')}}" class = "button"> Logout </a></td>
                 <td> Logged in as:<span class="useritem">{{current_user.username}} </span> </td>  
                 {% endif %}
+                
                 <!-- Links for nav bar go here-->
 
             </tr>
