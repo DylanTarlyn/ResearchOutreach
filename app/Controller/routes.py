@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.Model.models import Language, Post, User, Research
-from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics, SetupForm, SortLangauages, ApplyForm, sortRecommended
+from app.Controller.forms import PositionForm, EditForm, SetupForm, ApplyForm, SortForm
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
@@ -44,27 +44,33 @@ def home():
     user = current_user
 
     #Used to gather user input
-    dSort=sortDate()
-    rSort=SortTopics()
-    lSort = SortLangauages()
-    sSort = sortRecommended()
+    sform = SortForm()
 
     #Used to sort the posts based on input
-    date = dSort.date.data
-    topic = rSort.rTopics.data
-    language = lSort.language.data
-    myPosts = rSort.myposts.data
+    date = sform.date.data
+    topic = sform.rTopics.data
+    language = sform.language.data
+    myPosts = sform.myposts.data
+    reset = sform.reset.data
+    recc = sform.recommended.data
 
     #Default if not sorting is applied
     position = Post.query.order_by(Post.date1.desc())
 
     #Sorting posts
-    if dSort.validate_on_submit():
+
+    if sform.validate_on_submit():
         position = sort(date,topic,language,myPosts)
 
-    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, sform=sSort,lform=lSort, user=user)
+        if reset == True:
+            return redirect(url_for('routes.home'))
+        
+        if recc == 'Show recommended posts':
+            position = recommended()
 
-def sort(d, t,l,myP):
+    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), form = sform, user=user)
+
+def sort(d, t, l, myP):
     if d == 'Select Date':
         d = Post.date1.desc()
     if d == 'Newest':
@@ -80,7 +86,7 @@ def sort(d, t,l,myP):
                 position = current_user.get_user_posts().order_by(d)
                 return position
             else:
-                position=current_user.get_user_posts().filter(Post.language_field.any(SortLangauages.field==l)).order_by(d)
+                position=current_user.get_user_posts().filter(Post.language_field.any(Language.field==l)).order_by(d)
                 return position
         
         if l == 'Select Language':
@@ -115,25 +121,42 @@ def sort(d, t,l,myP):
     
     return position
 
-@bp_routes.route('/suggested', methods=['GET','POST'])
-@login_required
-def suggested(): 
+def recommended():
     user = current_user
-    dSort=sortDate()
-    rSort=SortTopics()
-    lSort = SortLangauages()
+    languages = ['x','x','x','x']  #array to store languages w/buffer
+    topics = [] #array to store topics
+    i = 0
 
-    #apply mulitiple filters for each research topic using a loop?
+    #This works, but only filters by the last tag associated with the user since it keeps resorting, not multisorting
 
-    #PUT QUERY FOR POSTS HERE (place holder used)
-    position=Post.query.order_by(Post.date1.desc())
+    for lang in user.get_user_lang().all():
+        languages.insert(i,lang.field)
+        i = i+1
 
-        #multi sort both researach topics and languages that match the research topics and languages for the user
-        #Query the table for research fields and language fields where they == user research and language research 
-        # (See models.py and the sorting above) 
+    for topic in user.get_user_tags().all():
+        topics.append(topic.field)
+    
+    
+    l1 = str(languages[0])
+    l2 = str(languages[1])
+    l3 = str(languages[2])
 
-    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), sform = None, dform=dSort, rform=rSort, user=user)
+    print(languages)
 
+    position = Post.query.filter(Post.language_field.any(Language.field==l1))
+    
+    #only works when filtering by 1 and 2 tags, not anything past that
+
+    if l2 !='x':
+        position = Post.query.filter(Post.language_field.any(Language.field==l1)) and Post.query.filter(
+        Post.language_field.any(Language.field==l2))
+        if l3 != 'x': #Doesn't work
+            position = Post.query.filter(Post.language_field.any(Language.field==l1)) and Post.query.filter(
+        Post.language_field.any(Language.field==l2)) and Post.query.filter(
+        Post.language_field.any(Language.field==l3))
+
+
+    return position
 
 #IMPORTANT
 # To change the topics and languages that appear, go to research.py and edit them manually in line 15

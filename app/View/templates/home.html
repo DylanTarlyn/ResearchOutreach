@@ -8,19 +8,20 @@
 
     {% block sort %}
     <form action="" method = "post">
-      {{ dform.hidden_tag() }}
+      {{ form.hidden_tag() }}
         <div class='formselect'>
-          <div>Sort by {{ dform.date }} 
-            {{rform.rTopics}}
-            {{lform.language}}
+          <div>Sort by {{ form.date }} 
+            {{form.rTopics}}
+            {{form.language}}
             {% if user.usertype == 'student' %}
-            {{sform.recommended}}
+            {{form.recommended}}
             {% endif %}
             <br><br>
             {% if user.usertype == 'faculty' %} <!-- Only displays "my posts" for faculty members-->
-            {{rform.myposts.label}}{{rform.myposts}}
+            {{form.myposts.label}}{{form.myposts}}
             {% endif %}
-             {{ rform.submit }}</div> 
+            {{form.reset.label}}{{form.reset}}
+             {{ form.submit }}</div> 
         </div>
     </form>
   {% endblock %}

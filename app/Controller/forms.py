@@ -59,21 +59,16 @@ class EditForm(FlaskForm):
     experience = TextAreaField('Experience')
     submit = SubmitField('Submit')
 
-class sortDate(FlaskForm):
+class SortForm(FlaskForm):
     date=SelectField(choices=[('Select Date'),('Newest'),('Oldest')]) #Time filters
-    
-class SortTopics(FlaskForm):
     rTopics=SelectField(choices=[('Select Topic'),('Topic1'),('Topic2'),('Topic3'),('Topic4'),('Topic5')])#research topic fields
-    myposts=BooleanField('Display my posts only')
-    submit=SubmitField('Apply filters')
-
-class SortLangauages(FlaskForm):
     language=SelectField(choices=[('Select Language'),('Lang1'),('Lang2'),('Lang3'),('Lang4'),('Lang5')])#programming languages
+    recommended=SelectField(choices=[('Show all posts'),('Show recommended posts')])
+    myposts=BooleanField('Display my posts only')
+    reset = BooleanField("Reset Filters")
+    submit=SubmitField('Apply filters')
 
 class ApplyForm(FlaskForm):
     statement =  StringField('Why are you interested in this position?', validators=[Length(min=1,max=400), DataRequired()])
     reference =  StringField('List at least one faculty reference', validators=[DataRequired()])
     apply = SubmitField('Apply')
-
-class sortRecommended(FlaskForm):
-    recommended=SelectField(choices=[('Show all posts'),('Show recommended posts')])
