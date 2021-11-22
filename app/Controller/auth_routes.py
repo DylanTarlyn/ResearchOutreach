@@ -21,6 +21,12 @@ def register():
 
     rform = RegistrationForm()
     if rform.validate_on_submit():
+        if rform.student.data == True:
+            if rform.faculty.data == True:
+                flash('Please select student OR faculty.')
+                return redirect(url_for('auth.register'))
+
+
         user = User(username=rform.username.data, email=rform.email.data)
         user.set_password(rform.password.data)
         if rform.student.data == True:

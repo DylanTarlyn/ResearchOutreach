@@ -42,72 +42,65 @@ def index():
 @login_required
 def home():
     user = current_user
-    print(user.get_user_tags().all())
-    for iter in user.research_field:
-        print(iter.user_research)
     dSort=sortDate()
     rSort=SortTopics()
     lSort = SortLangauages()
     sSort = sortRecommended()
+    date = dSort.date.data #use for sorting by date
     topic = rSort.rTopics.data #use for sorting by topic
-    language = lSort.language.data #use for sorting by language
+    language = lSort.language.data #use for sorting by language - add to sort
     position = Post.query.order_by(Post.date1.desc())
+    myPosts = rSort.myposts.data
+
     if dSort.validate_on_submit(): #Sorting
-        if rSort.myposts.data==True: #Sorting by only their posts
-            position=current_user.get_user_posts()
-            if dSort.date.data=='Select Date':
-                if rSort.rTopics.data == 'Select Topic':
-                    position = current_user.get_user_posts().order_by(Post.date1.desc())
-                else:
-                    position = current_user.get_user_posts().filter(Post.research_field.any(
-                        Research.field==topic)).order_by(Post.date1.desc())
-            if dSort.date.data=='Newest': 
-                if rSort.rTopics.data == 'Select Topic':
-                    position = current_user.get_user_posts().order_by(Post.date1.desc())
-                else:
-                    position = current_user.get_user_posts().filter(Post.research_field.any(
-                        Research.field==topic)).order_by(Post.date1.desc())
-            if dSort.date.data=='Oldest': 
-                if rSort.rTopics.data == 'Select Topic':
-                    position = current_user.get_user_posts().order_by(Post.date1)
-                else:
-                    position = current_user.get_user_posts().filter(Post.research_field.any(
-                        Research.field==topic)).order_by(Post.date1)
-        else: #Sorting all posts
-            if dSort.date.data=='Select Date':
-                if rSort.rTopics.data == 'Select Topic':
-                    position=Post.query.order_by(Post.date1.desc())
-                else:        
-                    position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1.desc())
-            if dSort.date.data == 'Newest':
-                if rSort.rTopics.data == 'Select Topic':
-                    position=Post.query.order_by(Post.date1.desc())
-                else:        
-                    position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1.desc())
-            if dSort.date.data == 'Oldest':
-                if rSort.rTopics.data == 'Select Topic':
-                    position=Post.query.order_by(Post.date1)
-                else:
-                    position = Post.query.filter(Post.research_field.any(Research.field==topic)).order_by(Post.date1)
+        position = sort(date,topic, myPosts)
+
     return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, sform=sSort, user=user)
+
+def sort(d, t, myP):
+    if d == 'Select Date':
+        d = Post.date1.desc()
+    if d == 'Newest':
+        d = Post.date1.desc()
+    if d == 'Oldest':
+        d = Post.date1
+
+    #Sorting by user posts only
+    if myP == True:
+        if t == 'Select Topic':
+            position = current_user.get_user_posts().order_by(d)
+            return position
+        else:
+            position=current_user.get_user_posts().filter(Post.research_field.any(Research.field==t)).order_by(d)
+            return position
+
+    #Default for if all filters have a selection
+    position = Post.query.filter(Post.research_field.any(Research.field==t)).order_by(d)
+
+    if t == 'Select Topic':
+        position = Post.query.order_by(d)
+        return position
+
+    return position
 
 @bp_routes.route('/suggested', methods=['GET','POST'])
 @login_required
 def suggested(): 
-    return redirect(url_for('routes.home'))
-    #user = current_user
-    #dSort=sortDate()
-    #rSort=SortTopics()
-    #lSort = SortLangauages()
+    user = current_user
+    dSort=sortDate()
+    rSort=SortTopics()
+    lSort = SortLangauages()
+
+    #apply mulitiple filters for each research topic using a loop?
 
     #PUT QUERY FOR POSTS HERE (place holder used)
-    #position=Post.query.order_by(Post.date1.desc())
+    position=Post.query.order_by(Post.date1.desc())
 
         #multi sort both researach topics and languages that match the research topics and languages for the user
         #Query the table for research fields and language fields where they == user research and language research 
         # (See models.py and the sorting above) 
 
-   # return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), sform = None, dform=dSort, rform=rSort, user=user)
+    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), sform = None, dform=dSort, rform=rSort, user=user)
 
 
 #IMPORTANT
