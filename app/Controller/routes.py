@@ -8,7 +8,7 @@ from flask_login import login_required, current_user
 
 
 from app import db
-from app.Model.models import Post, User, Research
+from app.Model.models import Language, Post, User, Research
 from app.Controller.forms import PositionForm, EditForm, sortDate, SortTopics, SetupForm, SortLangauages, ApplyForm, sortRecommended
 
 bp_routes = Blueprint('routes', __name__)
@@ -42,22 +42,29 @@ def index():
 @login_required
 def home():
     user = current_user
+
+    #Used to gather user input
     dSort=sortDate()
     rSort=SortTopics()
     lSort = SortLangauages()
     sSort = sortRecommended()
-    date = dSort.date.data #use for sorting by date
-    topic = rSort.rTopics.data #use for sorting by topic
-    language = lSort.language.data #use for sorting by language - add to sort
-    position = Post.query.order_by(Post.date1.desc())
+
+    #Used to sort the posts based on input
+    date = dSort.date.data
+    topic = rSort.rTopics.data
+    language = lSort.language.data
     myPosts = rSort.myposts.data
 
-    if dSort.validate_on_submit(): #Sorting
-        position = sort(date,topic, myPosts)
+    #Default if not sorting is applied
+    position = Post.query.order_by(Post.date1.desc())
 
-    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, sform=sSort, user=user)
+    #Sorting posts
+    if dSort.validate_on_submit():
+        position = sort(date,topic,language,myPosts)
 
-def sort(d, t, myP):
+    return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), dform=dSort, rform=rSort, sform=sSort,lform=lSort, user=user)
+
+def sort(d, t,l,myP):
     if d == 'Select Date':
         d = Post.date1.desc()
     if d == 'Newest':
@@ -67,20 +74,45 @@ def sort(d, t, myP):
 
     #Sorting by user posts only
     if myP == True:
+
         if t == 'Select Topic':
-            position = current_user.get_user_posts().order_by(d)
-            return position
-        else:
-            position=current_user.get_user_posts().filter(Post.research_field.any(Research.field==t)).order_by(d)
-            return position
+            if l == 'Select Language':
+                position = current_user.get_user_posts().order_by(d)
+                return position
+            else:
+                position=current_user.get_user_posts().filter(Post.language_field.any(SortLangauages.field==l)).order_by(d)
+                return position
+        
+        if l == 'Select Language':
+            if t == 'Select Topic':
+                position = current_user.get_user_posts().order_by(d)
+            else:
+                position=current_user.get_user_posts().filter(Post.research_field.any(Research.field==t)).order_by(d)
+                return position
 
-    #Default for if all filters have a selection
-    position = Post.query.filter(Post.research_field.any(Research.field==t)).order_by(d)
-
-    if t == 'Select Topic':
-        position = Post.query.order_by(d)
+        #If no filters are applied, display all
+        position = current_user.get_user_posts().filter(Post.research_field.any(Research.field==t)).filter(Post.language_field.any(Language.field==l)).order_by(d)
         return position
 
+    #Default for if all filters have a selection
+    position = Post.query.filter(Post.research_field.any(Research.field==t)).filter(Post.language_field.any(Language.field==l)).order_by(d)
+
+    if t == 'Select Topic':
+        if l == 'Select Language':
+            position = Post.query.order_by(d)
+            return position
+        else:
+            position = Post.query.filter(Post.language_field.any(Language.field==l)).order_by(d)
+            return position
+
+    if l == 'Select Language':
+        if t =='Select Topic':
+            position = Post.query.order_by(d)
+            return position
+        else:
+            position = Post.query.filter(Post.research_field.any(Research.field==t)).order_by(d)
+            return position
+    
     return position
 
 @bp_routes.route('/suggested', methods=['GET','POST'])
