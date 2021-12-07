@@ -98,6 +98,19 @@ class User(UserMixin, db.Model):
 
     def get_user_posts(self):
         return self.posts
+
+    def get_all_applications(self):
+        apps = Apply.query.all()
+        return apps
+
+    def get_faculty_apps(self):
+        mypostids = []
+        for id in self.get_user_posts():
+            mypostids.append(id.id)
+        return mypostids
+
+    def find_post_from_app(self, app):
+        return Post.query.filter_by(id=app.appid).first()
     
     def withdraw(self, oldapp):
         if self.is_applied(oldapp):

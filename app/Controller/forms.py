@@ -72,3 +72,7 @@ class ApplyForm(FlaskForm):
     statement =  StringField('Why are you interested in this position?', validators=[Length(min=1,max=400), DataRequired()])
     reference =  StringField('List at least one faculty reference', validators=[DataRequired()])
     apply = SubmitField('Apply')
+
+class ApplicantsForm(FlaskForm):
+    status = SelectField(choices=[('Pending'),('Approved for interview!'),('Not fit for role.'),('Not hired'),('Hired!')])
+    submit = SubmitField('Update Applicant Status')
