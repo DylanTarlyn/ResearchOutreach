@@ -177,6 +177,14 @@ a:visited{
     margin: 0px;
 }
 
+.posttablenew { 
+    width : 100%;
+    margin: 8px;
+    color: black;
+    background-color: rgb(231, 231, 231);
+    padding: 4px;
+}
+
 .posttitle {
     text-align: center;
     font-weight: bold;
