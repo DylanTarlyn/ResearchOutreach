@@ -5,6 +5,7 @@
 <h1>Submitted Apps</h1>
 {% for app in current_user.applied_apps() %}
     {% set post = app.appenrolled %}
+    {% if post != None %}
     {% include '_apps.html'%}
     <table class = "posttable" style = "width:100%" valign="top">
     <b>Response: </b> {{current_user.get_statement(post)}}
@@ -13,6 +14,7 @@
     <br>
     <b>Status: <i>{{current_user.get_status(post)}}</i></b>
     </table>
+    {% endif %}
 {% endfor %}
 {% endblock %}
 </html>
