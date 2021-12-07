@@ -20,6 +20,7 @@
                 <td><a href="{{url_for('routes.home')}}" class = "button"> Home </a></td> 
                     {% if current_user.usertype == 'faculty' %}
                 <td><a href="{{url_for('routes.post')}}" class = "button"> Post Position </a></td>
+                <td><a href="{{url_for('routes.receivedapps')}}" class = "button"> Received Applications </a></td>
                     {% elif current_user.usertype == 'student' %}
                 <td><a href="{{ url_for('routes.submittedapps') }}" class = "button"> Submitted Applications</a></td> 
                     {% endif %}

@@ -8,8 +8,8 @@ from flask_login import login_required, current_user
 
 
 from app import db
-from app.Model.models import Language, Post, User, Research
-from app.Controller.forms import PositionForm, EditForm, SetupForm, ApplyForm, SortForm
+from app.Model.models import Language, Post, User, Research, Apply
+from app.Controller.forms import ApplicantsForm, PositionForm, EditForm, SetupForm, ApplyForm, SortForm
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
@@ -308,9 +308,79 @@ def withdrawPost(postid):
 @login_required
 def submittedapps():
     print(current_user.applied_apps())
-    if current_user.applied_apps() != []:
+    #print(current_user.applied_apps().appenrolled)
+    if None in current_user.applied_apps():
+        print("~-~||NO APPS FOUND")
+    elif current_user.applied_apps() != []:
         return render_template('submittedapps.html')
     else:
         flash('You have not submitted any applications!')
     return redirect(url_for('routes.index'))
+
+@bp_routes.route('/receivedapps', methods=['GET', 'SET'])
+@login_required
+def receivedapps():
+    applicantform = ApplicantsForm()
+    # Testing a check for applications matching to faculty's posts
+    mypostids = []
+    print("User Post ID's: ")
+    for post in current_user.get_user_posts():
+        print(post.id)
+        mypostids.append(post.id)
+    # Testing 'facultyinfo' field from apply model compared to combination of user model info
+    print("{} {} {} {}".format(current_user.firstname, current_user.lastname, current_user.email, current_user.phone))
+    # Printing all applications iterating through student users
+    for student in User.query.filter_by(usertype='student'):
+        print(student.firstname, student.lastname)
+        for application in student.apps:
+            print(application.studentenrolled)
+    print()
+    # Testing it all together. Displaying the application name and student name for all applications for the current faculty user
+    print("User Applicants: ")
+    for app in Apply.query.all():
+        if app.appid in mypostids:
+            print("Application {}:".format(app.appid))
+            print("Student: {}".format(User.query.filter_by(id = app.studentid).first().firstname))
+
+    if (Apply.query.count() > 0):
+        return render_template('receivedapps.html', form = applicantform)
+    else:
+        flash('You have not received any applications!')
+    return redirect(url_for('routes.index'))
+
+@bp_routes.route('/status/<app_id><student_id>', methods=['SET', 'GET', 'POST'])
+@login_required
+def status(app_id, student_id):
+    applicantform = ApplicantsForm()
+    #app = Apply.query.filter_by(appid=app_id).first()
+    post = Post.query.filter_by(id=app_id).first()
+    student = User.query.filter_by(id=student_id).first()
+    app = Apply.query.filter_by(studentid=student.id).first()
+    print("~-~-|| STUDENT NAME ||-~-~")
+    print(student.firstname)
+    print(applicantform.status.data)
+    print("Before applyform validate")
+    if applicantform.validate_on_submit:
+        print()
+        print("Status Testing:")
+        print(applicantform.status.data)
+        #if applicantform.status.data == '1':
+        app.studentenrolled.set_status(post, applicantform.status.data)
+        db.session.commit()
+        flash('You have updated the status for ' + app.studentenrolled.firstname + ' ' + app.studentenrolled.lastname)
+        return redirect(url_for('routes.receivedapps'))
+    return render_template('receivedapps.html', form = applicantform)
+
+@bp_routes.route('/delete/<post_id>', methods=['DELETE', 'POST'])
+@login_required
+def delete(post_id):
+    post = Post.query.filter_by(id = post_id).first()
+    app = Apply.query.filter_by(appid=post.id).first()
+    student = User.query.filter_by(id=app.studentid).first()
+    if (post):
+        student.withdraw(post)
+        db.session.delete(post)
+        db.session.commit()
+        flash ('Posting "' + post.project_title + '"has been deleted.')
+        return redirect(url_for('routes.home'))
         
