@@ -13,12 +13,16 @@ def get_research():
     return Research.query.all()
 
 def get_researchlabel(theresearch):
+    if theresearch.field == 'x':
+        theresearch.field = 'Select Languages'
     return theresearch.field
 
 def get_language():
     return Language.query.all()
 
 def get_languagelabel(thelanguage):
+    if thelanguage.field == 'x':
+        thelanguage.field = 'Select Topics'
     return thelanguage.field
 
 
@@ -63,7 +67,7 @@ class SortForm(FlaskForm):
     date=SelectField(choices=[('Select Date'),('Newest'),('Oldest')]) #Time filters
     rTopics=SelectField(choices=[('Select Topic'),('Topic1'),('Topic2'),('Topic3'),('Topic4'),('Topic5')])#research topic fields
     language=SelectField(choices=[('Select Language'),('Lang1'),('Lang2'),('Lang3'),('Lang4'),('Lang5')])#programming languages
-    recommended=SelectField(choices=[('Show all posts'),('Show recommended posts')])
+    recommended=SelectField(choices=[('Show all posts'),('Show recommended topics'),('Show recommended languages')])
     myposts=BooleanField('Display my posts only')
     reset = BooleanField("Reset Filters")
     submit=SubmitField('Apply filters')

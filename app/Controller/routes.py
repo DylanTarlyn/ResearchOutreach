@@ -65,8 +65,8 @@ def home():
         if reset == True:
             return redirect(url_for('routes.home'))
         
-        if recc == 'Show recommended posts':
-            position = recommended()
+        if recc != 'Show all posts':
+            position = recommended(recc)
 
     return render_template('home.html', title="Home", posts=position.all(), totalPosts=position.count(), form = sform, user=user)
 
@@ -121,11 +121,13 @@ def sort(d, t, l, myP):
     
     return position
 
-def recommended():
+def recommended(r):
     user = current_user
     languages = ['x','x','x','x']  #array to store languages w/buffer
-    topics = [] #array to store topics
+    topics = ['x','x','x','x'] #array to store topics
     i = 0
+
+    position = Post.query.order_by(Post.date1.desc())
 
     #This works, but only filters by the last tag associated with the user since it keeps resorting, not multisorting
 
@@ -133,28 +135,42 @@ def recommended():
         languages.insert(i,lang.field)
         i = i+1
 
+    i = 0
     for topic in user.get_user_tags().all():
-        topics.append(topic.field)
+        topics.insert(i,topic.field)
+        i = i+1
     
     
     l1 = str(languages[0])
     l2 = str(languages[1])
     l3 = str(languages[2])
+    l4 = str(languages[3])
+    l5 = str(languages[4])
+
+    t1 = str(topics[0])
+    t2 = str(topics[1])
+    t3 = str(topics[2])
+    t4 = str(topics[3])
+    t5 = str(topics[4])
 
     print(languages)
+    print(topics)  
 
-    position = Post.query.filter(Post.language_field.any(Language.field==l1))
-    
-    #only works when filtering by 1 and 2 tags, not anything past that
+    if r == 'Show recommended topics':
+        position = Post.query.filter(
+        Post.research_field.any(Research.field==t5)) and Post.query.filter(
+        Post.research_field.any(Research.field==t4)) and Post.query.filter(
+        Post.research_field.any(Research.field==t3)) and Post.query.filter(
+        Post.research_field.any(Research.field==t2)) and Post.query.filter(
+        Post.research_field.any(Research.field==t1))
 
-    if l2 !='x':
-        position = Post.query.filter(Post.language_field.any(Language.field==l1)) and Post.query.filter(
-        Post.language_field.any(Language.field==l2))
-        if l3 != 'x': #Doesn't work
-            position = Post.query.filter(Post.language_field.any(Language.field==l1)) and Post.query.filter(
-        Post.language_field.any(Language.field==l2)) and Post.query.filter(
-        Post.language_field.any(Language.field==l3))
-
+    if r == 'Show recommended languages':
+        position = Post.query.filter(
+            Post.language_field.any(Language.field==l5)) and Post.query.filter(
+                Post.language_field.any(Language.field==l4)) and Post.query.filter(
+                Post.language_field.any(Language.field==l3)) and Post.query.filter(
+                Post.language_field.any(Language.field==l2)) and Post.query.filter(
+                Post.language_field.any(Language.field==l1))
 
     return position
 
