@@ -14,7 +14,7 @@ def get_research():
 
 def get_researchlabel(theresearch):
     if theresearch.field == 'x':
-        theresearch.field = 'Select Languages'
+        theresearch.field = 'Select Topics'
     return theresearch.field
 
 def get_language():
@@ -22,7 +22,7 @@ def get_language():
 
 def get_languagelabel(thelanguage):
     if thelanguage.field == 'x':
-        thelanguage.field = 'Select Topics'
+        thelanguage.field = 'Select Languages'
     return thelanguage.field
 
 
