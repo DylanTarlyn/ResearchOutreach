@@ -1,1 +1,1 @@
-Run using "python research.py"
+Run using Python research.py
